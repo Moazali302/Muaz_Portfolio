@@ -1,0 +1,60 @@
+{
+  "name": "portfolio-app",
+  "version": "1.0.0",
+  "private": true,
+  "description": "Moaz Ali Portfolio | Angular 20 + TailwindCSS v4.2 + MEAN Stack",
+  "scripts": {
+    "ng": "ng",
+    "start": "cd frontend/portfolio-app && ng serve --open --port 4202",
+    "frontend": "cd frontend/portfolio-app && ng serve --port 4202",
+    "backend": "cd backend && node server.js",
+    "dev": "concurrently \"npm run frontend\" \"npm run backend\"",
+    "build": "cd frontend/portfolio-app && ng build --configuration production",
+    "watch": "cd frontend/portfolio-app && ng build --watch --configuration development",
+    "test": "cd frontend/portfolio-app && ng test"
+  },
+  "prettier": {
+    "printWidth": 100,
+    "singleQuote": true,
+    "overrides": [
+      {
+        "files": "*.html",
+        "options": {
+          "parser": "angular"
+        }
+      }
+    ]
+  },
+  "dependencies": {
+    "@angular/animations": "^20.3.9",
+    "@angular/common": "^20.2.0",
+    "@angular/compiler": "^20.2.0",
+    "@angular/core": "^20.2.0",
+    "@angular/forms": "^20.2.0",
+    "@angular/platform-browser": "^20.2.0",
+    "@angular/router": "^20.2.0",
+    "@ngx-translate/core": "^17.0.0",
+    "@ngx-translate/http-loader": "^17.0.0",
+    "rxjs": "~7.8.0",
+    "sweetalert2": "^11.26.3",
+    "tslib": "^2.3.0",
+    "zone.js": "~0.15.0"
+  },
+  "devDependencies": {
+    "@angular/build": "^20.2.1",
+    "@angular/cli": "^20.2.1",
+    "@angular/compiler-cli": "^20.2.0",
+    "@types/jasmine": "~5.1.0",
+    "autoprefixer": "^10.4.21",
+    "concurrently": "^9.2.1",
+    "jasmine-core": "~5.9.0",
+    "karma": "~6.4.0",
+    "karma-chrome-launcher": "~3.2.0",
+    "karma-coverage": "~2.2.0",
+    "karma-jasmine": "~5.1.0",
+    "karma-jasmine-html-reporter": "~2.1.0",
+    "postcss": "^8.5.6",
+    "tailwindcss": "^3.4.18",
+    "typescript": "~5.9.2"
+  }
+}
