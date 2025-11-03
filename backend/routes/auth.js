@@ -9,9 +9,7 @@ const router = express.Router();
 // Helper to get cities for a country
 async function getCitiesForCountry(country) {
   try {
-    // Using REST Countries API to get country info, then use a cities API
-    // For now, we'll use a simple mapping or external API
-    // You can replace this with your preferred cities API
+
     const response = await axios.get(`https://api.countrystatecity.in/v1/countries/${country}/cities`, {
       headers: {
         'X-CSCAPI-KEY': process.env.COUNTRY_API_KEY || ''
@@ -19,7 +17,7 @@ async function getCitiesForCountry(country) {
     });
     return response.data.map(city => city.name);
   } catch (error) {
-    // Fallback: return empty array or stub data
+   
     return [];
   }
 }
