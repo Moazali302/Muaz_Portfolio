@@ -39,3 +39,15 @@ body {
 .dark {
   color-scheme: dark;
 }
+/* Animation base styles */
+.revealed {
+  opacity: 1 !important;
+  transform: translateY(0) !important;
+  transition: all 0.8s ease-out;
+}
+
+/* Initial hidden state */
+[appScrollReveal] {
+  opacity: 0;
+  transform: translateY(40px);
+}
