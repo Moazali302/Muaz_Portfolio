@@ -1,8 +1,8 @@
 import { Component, inject } from '@angular/core';
 import{CommonModule} from '@angular/common';
 import { RouterLink, RouterLinkActive } from '@angular/router';
-import { TranslateService } from '../services/translate.service';
-import { ThemeService } from '../services/theme.service';
+import { TranslateService } from '../guards/services/translate.service';
+import { ThemeService } from '../guards/services/theme.service';
 
 @Component({
   selector: 'app-header',

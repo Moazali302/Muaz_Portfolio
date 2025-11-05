@@ -1,8 +1,8 @@
 import { Component, inject, signal } from '@angular/core';
 import { CommonModule } from '@angular/common';
 import { FormsModule } from '@angular/forms';
-import { TranslateService } from '../services/translate.service';
-import { ApiService, ContactMessage } from '../services/api.service';
+import { TranslateService } from '../guards/services/translate.service';
+import { ApiService, ContactMessage } from '../guards/services/api.service';
 import Swal from 'sweetalert2';
 
 @Component({

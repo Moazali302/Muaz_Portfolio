@@ -1,6 +1,6 @@
 import { Component, inject } from '@angular/core';
 import { CommonModule } from '@angular/common';
-import { TranslateService } from '../services/translate.service';
+import { TranslateService } from '../guards/services/translate.service';
 
 @Component({
   selector: 'app-skills',

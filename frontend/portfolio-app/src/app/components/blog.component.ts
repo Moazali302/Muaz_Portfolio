@@ -1,8 +1,8 @@
 import { Component, inject, OnInit, signal } from '@angular/core';
 import { CommonModule, DatePipe } from '@angular/common';
 import{RouterLink} from '@angular/router';
-import { TranslateService } from '../services/translate.service';
-import { ApiService, BlogPost } from '../services/api.service';
+import { TranslateService } from '../guards/services/translate.service';
+import { ApiService, BlogPost } from '../guards/services/api.service';
 
 @Component({
   selector: 'app-blog',

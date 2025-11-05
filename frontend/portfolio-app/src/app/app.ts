@@ -2,7 +2,7 @@ import { Component, OnInit } from '@angular/core';
 import { RouterOutlet } from '@angular/router';
 import { HeaderComponent } from './components/header.component';
 import { FooterComponent } from './components/footer.component';
-import { TranslateService } from './services/translate.service';
+import { TranslateService } from './guards/services/translate.service';
 import { trigger, transition, style, animate } from '@angular/animations';
 
 @Component({

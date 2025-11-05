@@ -1,6 +1,6 @@
 import { Component, inject } from '@angular/core';
 import { CommonModule } from '@angular/common';
-import { TranslateService } from '../services/translate.service';
+import { TranslateService } from '../guards/services/translate.service';
 
 @Component({
   selector: 'app-footer',
@@ -12,7 +12,7 @@ import { TranslateService } from '../services/translate.service';
         <div class="grid md:grid-cols-3 gap-8 mb-8">
           <div>
             <h3 class="text-xl font-bold mb-4 text-white">MoazAli</h3>
-            <p class="text-slate-400">Software Developer & Student at Riphah International University</p>
+            <p class="text-slate-400">Full Stack Developer & Student at Riphah International University</p>
           </div>
           <div>
             <h4 class="text-lg font-semibold mb-4 text-white">Quick Links</h4>

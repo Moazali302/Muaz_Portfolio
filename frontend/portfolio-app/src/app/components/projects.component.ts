@@ -1,8 +1,8 @@
 import { Component, inject, OnInit, signal, computed } from '@angular/core';
 import { CommonModule } from '@angular/common';
 import { FormsModule } from '@angular/forms';
-import { TranslateService } from '../services/translate.service';
-import { ApiService, GitHubRepo } from '../services/api.service';
+import { TranslateService } from '../guards/services/translate.service';
+import { ApiService, GitHubRepo } from '../guards/services/api.service';
 
 @Component({
   selector: 'app-projects',

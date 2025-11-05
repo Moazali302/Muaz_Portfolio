@@ -6,8 +6,8 @@ import {
 } from '@angular/core';
 import { CommonModule } from '@angular/common';
 import { RouterLink } from '@angular/router';
-import { TranslateService } from '../services/translate.service';
-import { ApiService } from '../services/api.service';
+import { TranslateService } from '../guards/services/translate.service';
+import { ApiService } from '../guards/services/api.service';
 import Swal from 'sweetalert2';
 import { trigger, style, animate, transition, state } from '@angular/animations';
 
