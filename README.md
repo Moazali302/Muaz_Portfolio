@@ -89,21 +89,7 @@ cd backend
 npm install
 ```
 
-3. Create a `.env` file in the `backend` directory. You can copy from the root `.env.example`:
-   - On Windows: `copy ..\\.env.example backend\.env`
-   - On Linux/Mac: `cp .env.example backend/.env`
-   
-   Then update `.env` with your configuration:
-   ```env
-   MONGODB_URI=mongodb://127.0.0.1:27017/portfolio
-   JWT_SECRET=your-secret-key-here-change-in-production
-   PORT=3000
-   SMTP_HOST=smtp.gmail.com
-   SMTP_PORT=587
-   SMTP_USER=your-email@gmail.com
-   SMTP_PASS=your-app-password
-   COUNTRY_API_KEY=your-country-api-key-optional
-   ```
+3. Create a `.env` file in the `backend` 
 
 5. Seed the database (creates admin user and sample blog post):
 ```bash
@@ -194,10 +180,7 @@ concurrently "cd backend && npm run dev" "cd frontend/portfolio-app && npm start
 - **Theme Toggle**: Click the sun/moon icon in the header to toggle between light and dark themes
 - **Language Toggle**: Click the language button (EN/اردو) in the header to switch between English and Urdu
 
-## 📦 Default Credentials (After Seeding)
 
-- **Email**: admin@portfolio.com
-- **Password**: admin123
 
 **⚠️ IMPORTANT**: Change the default admin password in production!
 
