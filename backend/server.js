@@ -4,14 +4,23 @@ const cors = require('cors');
 const dotenv = require('dotenv');
 const rateLimit = require('express-rate-limit');
 const path = require('path');
+const dns = require('dns');
 
+dns.setServers(['8.8.8.8', '1.1.1.1']);
 dotenv.config();
 
 const app = express();
 const PORT = process.env.PORT || 3000;
 
 // ===== Middleware =====
-app.use(cors());
+const allowedOrigins = process.env.NODE_ENV === 'production'
+  ? [process.env.FRONTEND_URL]
+  : ['http://localhost:4202']; // Angular dev server
+
+app.use(cors({
+  origin: allowedOrigins,
+  credentials: true
+}));
 app.use(express.json());
 app.use(express.urlencoded({ extended: true }));
 
@@ -35,12 +44,12 @@ app.use('/api/newsletter', require('./routes/newsletter'));
 
 // ===== MongoDB Connection =====
 mongoose
-  .connect(process.env.MONGODB_URI || 'mongodb://127.0.0.1:27017/portfolio', {
-    useNewUrlParser: true,
-    useUnifiedTopology: true,
-  })
-  .then(() => console.log('✅ MongoDB connected successfully'))
-  .catch((err) => console.error('MongoDB connection error:', err));
+  .connect(process.env.MONGODB_URI)
+  .then(() => console.log('MongoDB connected successfully'))
+  .catch((err) => {
+    console.error('MongoDB connection error:', err);
+    process.exit(1); 
+  });
 
 // ===== Health Check =====
 app.get('/api/health', (req, res) => {
@@ -48,7 +57,6 @@ app.get('/api/health', (req, res) => {
 });
 
 // ===== Serve Angular Frontend =====
-// 🟢 Important Part
 const frontendPath = path.join(__dirname, '../frontend/portfolio-app/dist/portfolio-app/browser');
 app.use(express.static(frontendPath));
 
