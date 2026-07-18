@@ -39,6 +39,20 @@ export interface ContactMessage {
   email: string
   message: string
 }
+ export interface Experience {
+  _id?: string
+  company: string
+  role: string
+  employmentType: string
+  location?: string
+  startDate: string
+  endDate?: string | null
+  isCurrent: boolean
+  description: string
+  technologies: string[]
+  companyUrl?: string
+  order?: number
+}
 
 // ---------- Service ----------
 @Injectable({
@@ -66,6 +80,14 @@ export class ApiService {
 
   getBlogPost(slug: string): Observable<BlogPost> {
     return this.http.get<BlogPost>(`${this.apiUrl}/blog/${slug}`)
+  }
+   // ----- Experience -----
+  getExperiences(): Observable<Experience[]> {
+    return this.http.get<Experience[]>(`${this.apiUrl}/experience`)
+  }
+
+  getExperience(id: string): Observable<Experience> {
+    return this.http.get<Experience>(`${this.apiUrl}/experience/${id}`)
   }
 
   // ----- Contact -----
