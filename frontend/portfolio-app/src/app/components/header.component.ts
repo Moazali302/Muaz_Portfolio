@@ -33,6 +33,10 @@ import { ThemeService } from '../guards/services/theme.service';
              class="hover:text-indigo-600 dark:hover:text-indigo-400 transition-colors">
             {{ translate.translate('nav.projects') }}
           </a>
+          <a routerLink="/experience" routerLinkActive="text-indigo-600 dark:text-indigo-400"
+             class="hover:text-indigo-600 dark:hover:text-indigo-400 transition-colors">
+            {{ translate.translate('nav.experience') }}
+          </a>
           <a routerLink="/blog" routerLinkActive="text-indigo-600 dark:text-indigo-400"
              class="hover:text-indigo-600 dark:hover:text-indigo-400 transition-colors">
             {{ translate.translate('nav.blog') }}
