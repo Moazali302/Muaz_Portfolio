@@ -42,7 +42,7 @@ async function seed() {
         excerpt: 'Welcome to my portfolio website! Here you can find my projects, blog posts, and ways to get in touch.',
         body: `# Welcome to My Portfolio
 
-This is a sample blog post to demonstrate the blog functionality of the portfolio website.
+This is a sample blog post to demnode scripts\seed.experience.jsonstrate the blog functionality of the portfolio website.
 
 ## About Me
 
