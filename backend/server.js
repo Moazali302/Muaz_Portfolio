@@ -13,12 +13,18 @@ const app = express();
 const PORT = process.env.PORT || 3000;
 
 // ===== Middleware =====
-const allowedOrigins = process.env.NODE_ENV === 'production'
-  ? [process.env.FRONTEND_URL]
-  : ['http://localhost:4202']; // Angular dev server
+const allowedOrigins = [
+  'http://localhost:4202',
+  process.env.FRONTEND_URL
+];
 
 app.use(cors({
-  origin: allowedOrigins,
+  origin: function (origin, callback) {
+    if (!origin || allowedOrigins.includes(origin)) {
+      return callback(null, true);
+    }
+    return callback(new Error('Not allowed by CORS'));
+  },
   credentials: true
 }));
 app.use(express.json());
