@@ -57,15 +57,19 @@ app.get('/api/health', (req, res) => {
   res.json({ status: 'ok', message: 'Portfolio API is running' });
 });
 
-// ===== Serve Angular Frontend =====
-const frontendPath = path.join(__dirname, '../frontend/portfolio-app/dist/portfolio-app/browser');
-app.use(express.static(frontendPath));
+// // ===== Serve Angular Frontend =====
+// const frontendPath = path.join(__dirname, '../frontend/portfolio-app/dist/portfolio-app/browser');
+// app.use(express.static(frontendPath));
 
-// Catch-all to serve Angular index.html for SPA routes
-app.get('*', (req, res) => {
-  res.sendFile(path.join(frontendPath, 'index.html'));
+// // Catch-all to serve Angular index.html for SPA routes
+// app.get('*', (req, res) => {
+//   res.sendFile(path.join(frontendPath, 'index.html'));
+// });
+  app.get('/', (req, res) => {
+  res.json({
+    message: "Portfolio Backend API Running"
+  });
 });
-
 // ===== Start Server =====
 app.listen(PORT, () => {
   console.log(`🚀 Server running on: http://localhost:${PORT}`);
