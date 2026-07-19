@@ -4,21 +4,23 @@ const NodeCache = require('node-cache');
 
 const router = express.Router();
 
-// Cache GitHub responses for 1 hour
-const cache = new NodeCache({ stdTTL: 3600 });
+// Cache GitHub responses for 5 minutes (balance between freshness & GitHub rate limits)
+const cache = new NodeCache({ stdTTL: 300 });
 
 router.get('/repos', async (req, res) => {
   try {
     const username = 'Moazali302';
     const cacheKey = `github_repos_${username}`;
-    
-    // Check cache first
-    const cached = cache.get(cacheKey);
-    if (cached) {
-      return res.json(cached);
+
+    const forceRefresh = req.query.refresh === 'true';
+
+    if (!forceRefresh) {
+      const cached = cache.get(cacheKey);
+      if (cached) {
+        return res.json(cached);
+      }
     }
 
-    // Fetch from GitHub API
     const response = await axios.get(`https://api.github.com/users/${username}/repos`, {
       headers: {
         'Accept': 'application/vnd.github.v3+json',
@@ -47,14 +49,12 @@ router.get('/repos', async (req, res) => {
       default_branch: repo.default_branch
     }));
 
-    // Cache the results
     cache.set(cacheKey, repos);
-
     res.json(repos);
   } catch (error) {
     console.error('GitHub API Error:', error.message);
     if (error.response?.status === 403) {
-      res.status(503).json({ 
+      res.status(503).json({
         error: 'GitHub API rate limit exceeded',
         message: 'Please try again later'
       });
@@ -68,7 +68,7 @@ router.get('/repo/:owner/:repo/readme', async (req, res) => {
   try {
     const { owner, repo } = req.params;
     const cacheKey = `github_readme_${owner}_${repo}`;
-    
+
     const cached = cache.get(cacheKey);
     if (cached) {
       return res.json(cached);
@@ -102,4 +102,3 @@ router.get('/repo/:owner/:repo/readme', async (req, res) => {
 });
 
 module.exports = router;
-
