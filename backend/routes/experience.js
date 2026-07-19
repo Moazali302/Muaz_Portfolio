@@ -1,5 +1,5 @@
 const express = require('express');
-const Experience = require('../models/Experience');
+const Experience = require('../models/experience');
 const { authenticateToken } = require('../middleware/auth');
 
 const router = express.Router();

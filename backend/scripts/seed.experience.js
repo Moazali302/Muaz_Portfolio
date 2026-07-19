@@ -1,7 +1,7 @@
 const mongoose = require('mongoose');
 const dotenv = require('dotenv');
 const dns = require('dns');
-const Experience = require('../models/Experience');
+const Experience = require('../models/experience');
 
 dns.setServers(['8.8.8.8', '1.1.1.1']);
 dotenv.config();
