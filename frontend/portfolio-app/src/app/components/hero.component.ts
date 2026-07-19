@@ -1,9 +1,4 @@
-import {
-  Component,
-  ElementRef,
-  inject,
-  AfterViewInit,
-} from '@angular/core';
+import { Component, ElementRef, inject, AfterViewInit } from '@angular/core';
 import { CommonModule } from '@angular/common';
 import { RouterLink } from '@angular/router';
 import { TranslateService } from '../guards/services/translate.service';
@@ -19,18 +14,16 @@ import { trigger, style, animate, transition, state } from '@angular/animations'
     trigger('fadeInUp', [
       state('hidden', style({ opacity: 0, transform: 'translateY(50px)' })),
       state('visible', style({ opacity: 1, transform: 'translateY(0)' })),
-      transition('hidden => visible', [
-        animate('1000ms cubic-bezier(0.23, 1, 0.32, 1)'),
-      ]),
+      transition('hidden => visible', [animate('1000ms cubic-bezier(0.23, 1, 0.32, 1)')]),
     ]),
   ],
   template: `
     <section
       id="hero"
       [@fadeInUp]="isVisible ? 'visible' : 'hidden'"
-      class="min-h-screen flex items-center justify-center px-4 pt-20 pb-12 
-             bg-gradient-to-br from-indigo-50 via-purple-50 to-pink-50 
-             dark:from-slate-900 dark:via-slate-800 dark:to-slate-900 
+      class="min-h-screen flex items-center justify-center px-4 pt-20 pb-12
+             bg-gradient-to-br from-indigo-50 via-purple-50 to-pink-50
+             dark:from-slate-900 dark:via-slate-800 dark:to-slate-900
              transition-all duration-700"
     >
       <div class="container mx-auto max-w-6xl">
@@ -38,11 +31,11 @@ import { trigger, style, animate, transition, state } from '@angular/animations'
           <!-- Left Side -->
           <div>
             <div
-              class="w-48 h-48 mx-auto md:mx-0 mb-8 rounded-full 
+              class="w-48 h-48 mx-auto md:mx-0 mb-8 rounded-full
                      bg-gradient-to-br from-indigo-400 to-purple-600 p-[3px] shadow-2xl"
             >
               <div
-                class="w-full h-full rounded-full overflow-hidden bg-white dark:bg-slate-800 
+                class="w-full h-full rounded-full overflow-hidden bg-white dark:bg-slate-800
                        flex items-center justify-center"
               >
                 <img
@@ -54,8 +47,8 @@ import { trigger, style, animate, transition, state } from '@angular/animations'
             </div>
 
             <h1
-              class="text-5xl md:text-6xl font-bold mb-4 
-                     bg-gradient-to-r from-indigo-600 via-purple-600 to-pink-600 
+              class="text-5xl md:text-6xl font-bold mb-4
+                     bg-gradient-to-r from-indigo-600 via-purple-600 to-pink-600
                      bg-clip-text text-transparent"
             >
               {{ translate.translate('hero.title') }}
@@ -71,7 +64,7 @@ import { trigger, style, animate, transition, state } from '@angular/animations'
             <div class="flex flex-wrap gap-4 mb-6">
               <button
                 (click)="openHireEmail()"
-                class="px-6 py-3 bg-gradient-to-r from-indigo-600 to-purple-600 text-white rounded-lg 
+                class="px-6 py-3 bg-gradient-to-r from-indigo-600 to-purple-600 text-white rounded-lg
                        font-semibold hover:shadow-lg transform hover:-translate-y-1 transition-all duration-200"
               >
                 {{ translate.translate('hero.hire') }}
@@ -79,9 +72,9 @@ import { trigger, style, animate, transition, state } from '@angular/animations'
 
               <button
                 (click)="downloadResume()"
-                class="px-6 py-3 border-2 border-indigo-600 dark:border-indigo-400 
-                       text-indigo-600 dark:text-indigo-400 rounded-lg font-semibold 
-                       hover:bg-indigo-50 dark:hover:bg-slate-800 transform hover:-translate-y-1 
+                class="px-6 py-3 border-2 border-indigo-600 dark:border-indigo-400
+                       text-indigo-600 dark:text-indigo-400 rounded-lg font-semibold
+                       hover:bg-indigo-50 dark:hover:bg-slate-800 transform hover:-translate-y-1
                        transition-all duration-200"
               >
                 {{ translate.translate('hero.resume') }}
@@ -89,9 +82,9 @@ import { trigger, style, animate, transition, state } from '@angular/animations'
 
               <a
                 routerLink="/contact"
-                class="px-6 py-3 border-2 border-purple-600 dark:border-purple-400 
-                       text-purple-600 dark:text-purple-400 rounded-lg font-semibold 
-                       hover:bg-purple-50 dark:hover:bg-slate-800 transform hover:-translate-y-1 
+                class="px-6 py-3 border-2 border-purple-600 dark:border-purple-400
+                       text-purple-600 dark:text-purple-400 rounded-lg font-semibold
+                       hover:bg-purple-50 dark:hover:bg-slate-800 transform hover:-translate-y-1
                        transition-all duration-200"
               >
                 {{ translate.translate('hero.contact') }}
@@ -103,7 +96,7 @@ import { trigger, style, animate, transition, state } from '@angular/animations'
               <a
                 href="https://github.com/Moazali302"
                 target="_blank"
-                class="text-slate-600 dark:text-slate-400 hover:text-indigo-600 
+                class="text-slate-600 dark:text-slate-400 hover:text-indigo-600
                        dark:hover:text-indigo-400 transition-colors"
               >
                 <i class="fa-brands fa-github text-2xl"></i>
@@ -111,7 +104,7 @@ import { trigger, style, animate, transition, state } from '@angular/animations'
               <a
                 href="https://www.linkedin.com/in/moaz-ali-4710ba397/"
                 target="_blank"
-                class="text-slate-600 dark:text-slate-400 hover:text-indigo-600 
+                class="text-slate-600 dark:text-slate-400 hover:text-indigo-600
                        dark:hover:text-indigo-400 transition-colors"
               >
                 <i class="fa-brands fa-linkedin text-2xl"></i>
@@ -123,34 +116,17 @@ import { trigger, style, animate, transition, state } from '@angular/animations'
           <div class="hidden md:block">
             <div class="relative">
               <div
-                class="absolute inset-0 bg-gradient-to-r from-indigo-400 to-purple-600 
+                class="absolute inset-0 bg-gradient-to-r from-indigo-400 to-purple-600
                        rounded-3xl transform rotate-6 opacity-20"
               ></div>
-              <div
-                class="relative bg-white dark:bg-slate-800 rounded-3xl p-8 shadow-2xl"
-              >
+              <div class="relative bg-white dark:bg-slate-800 rounded-3xl p-8 shadow-2xl">
                 <h3 class="text-xl font-bold mb-4 text-slate-800 dark:text-slate-200">
                   Quick Stats
                 </h3>
                 <div class="space-y-4">
                   <div class="flex items-center gap-3">
                     <div
-                      class="w-12 h-12 rounded-full bg-gradient-to-br from-indigo-500 to-purple-600 
-                             flex items-center justify-center text-white font-bold"
-                    >
-                      JS
-                    </div>
-                    <div>
-                      <p class="font-semibold text-slate-800 dark:text-slate-200">
-                        JavaScript Expert
-                      </p>
-                      <p class="text-sm text-slate-600 dark:text-slate-400">Frontend & Backend</p>
-                    </div>
-                  </div>
-                  <div class="flex items-center gap-3">
-                    <div
-                      class="w-12 h-12 rounded-full bg-gradient-to-br from-teal-500 to-cyan-600 
-                             flex items-center justify-center text-white font-bold"
+                      class="w-12 h-12 rounded-full bg-gradient-to-br from-indigo-500 to-purple-600 flex items-center justify-center text-white font-bold"
                     >
                       AN
                     </div>
@@ -158,21 +134,49 @@ import { trigger, style, animate, transition, state } from '@angular/animations'
                       <p class="font-semibold text-slate-800 dark:text-slate-200">
                         Angular Developer
                       </p>
-                      <p class="text-sm text-slate-600 dark:text-slate-400">Modern Web Apps</p>
+                      <p class="text-sm text-slate-600 dark:text-slate-400">Enterprise Web Apps</p>
                     </div>
                   </div>
+
                   <div class="flex items-center gap-3">
                     <div
-                      class="w-12 h-12 rounded-full bg-gradient-to-br from-pink-500 to-rose-600 
-                             flex items-center justify-center text-white font-bold"
+                      class="w-12 h-12 rounded-full bg-gradient-to-br from-teal-500 to-cyan-600 flex items-center justify-center text-white font-bold"
                     >
-                      ND
+                      AG
                     </div>
                     <div>
-                      <p class="font-semibold text-slate-800 dark:text-slate-200">
-                        Node.js Developer
+                      <p class="font-semibold text-slate-800 dark:text-slate-200">ag-Grid Expert</p>
+                      <p class="text-sm text-slate-600 dark:text-slate-400">
+                        Hierarchical Data Systems
                       </p>
-                      <p class="text-sm text-slate-600 dark:text-slate-400">API & Backend</p>
+                    </div>
+                  </div>
+
+                  <div class="flex items-center gap-3">
+                    <div
+                      class="w-12 h-12 rounded-full bg-gradient-to-br from-pink-500 to-rose-600 flex items-center justify-center text-white font-bold"
+                    >
+                      RB
+                    </div>
+                    <div>
+                      <p class="font-semibold text-slate-800 dark:text-slate-200">RBAC & i18n</p>
+                      <p class="text-sm text-slate-600 dark:text-slate-400">
+                        Multi-Portal Architecture
+                      </p>
+                    </div>
+                  </div>
+
+                  <div class="flex items-center gap-3">
+                    <div
+                      class="w-12 h-12 rounded-full bg-gradient-to-br from-sky-500 to-blue-600 flex items-center justify-center text-white font-bold"
+                    >
+                      TW
+                    </div>
+                    <div>
+                      <p class="font-semibold text-slate-800 dark:text-slate-200">Tailwind CSS</p>
+                      <p class="text-sm text-slate-600 dark:text-slate-400">
+                        Responsive UI Styling
+                      </p>
                     </div>
                   </div>
                 </div>
@@ -198,7 +202,7 @@ export class HeroComponent implements AfterViewInit {
           observer.unobserve(this.el.nativeElement);
         }
       },
-      { threshold: 0.3 }
+      { threshold: 0.3 },
     );
     observer.observe(this.el.nativeElement);
   }
@@ -219,7 +223,7 @@ export class HeroComponent implements AfterViewInit {
         const email = 'moazj049@gmail.com';
         const subject = encodeURIComponent('Hire Inquiry');
         const body = encodeURIComponent(
-          'Hello Moaz Ali,\n\nI would like to discuss a project opportunity with you.\n\nBest regards,\n'
+          'Hello Moaz Ali,\n\nI would like to discuss a project opportunity with you.\n\nBest regards,\n',
         );
         const mailtoLink = `mailto:${email}?subject=${subject}&body=${body}`;
         window.location.href = mailtoLink;
