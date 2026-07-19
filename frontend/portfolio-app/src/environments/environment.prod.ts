@@ -1,4 +1,4 @@
 export const environment = {
   production: true,
-  apiUrl: '/api'
+  apiUrl: 'https://muaz-portfolio-8m3a.onrender.com/api'
 };
