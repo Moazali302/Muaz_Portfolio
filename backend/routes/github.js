@@ -7,6 +7,13 @@ const router = express.Router();
 // Cache GitHub responses for 1 hour
 const cache = new NodeCache({ stdTTL: 3600 });
 
+const GITHUB_TOKEN = process.env.GITHUB_TOKEN;
+const githubHeaders={
+  'Accept': 'application/vnd.github.v3+json',
+  'User-Agent': 'Portfolio-API',
+  ...(GITHUB_TOKEN ? { 'Authorization': `token ${GITHUB_TOKEN}` } : {})
+};
+
 router.get('/repos', async (req, res) => {
   try {
     const username = 'Moazali302';
@@ -20,10 +27,7 @@ router.get('/repos', async (req, res) => {
 
     // Fetch from GitHub API
     const response = await axios.get(`https://api.github.com/users/${username}/repos`, {
-      headers: {
-        'Accept': 'application/vnd.github.v3+json',
-        'User-Agent': 'Portfolio-API'
-      },
+      headers: githubHeaders,
       params: {
         sort: 'updated',
         direction: 'desc',
@@ -49,10 +53,16 @@ router.get('/repos', async (req, res) => {
 
     // Cache the results
     cache.set(cacheKey, repos);
+   cache.set(`${cacheKey}_backup`, repos, 0); 
 
     res.json(repos);
   } catch (error) {
     console.error('GitHub API Error:', error.message);
+    const backup = cache.get(`github_repos_Moazali302_backup`);
+    if (backup) {
+      return res.json(backup);
+    }
+     
     if (error.response?.status === 403) {
       res.status(503).json({ 
         error: 'GitHub API rate limit exceeded',
@@ -77,10 +87,7 @@ router.get('/repo/:owner/:repo/readme', async (req, res) => {
     const response = await axios.get(
       `https://api.github.com/repos/${owner}/${repo}/readme`,
       {
-        headers: {
-          'Accept': 'application/vnd.github.v3+json',
-          'User-Agent': 'Portfolio-API'
-        }
+        headers: githubHeaders
       }
     );
 
@@ -91,6 +98,7 @@ router.get('/repo/:owner/:repo/readme', async (req, res) => {
     };
 
     cache.set(cacheKey, readme);
+    cache.set(`${cacheKey}_backup`, readme, 0);
     res.json(readme);
   } catch (error) {
     if (error.response?.status === 404) {
