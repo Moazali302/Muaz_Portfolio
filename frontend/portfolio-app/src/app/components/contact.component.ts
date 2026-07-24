@@ -29,7 +29,7 @@ import Swal from 'sweetalert2';
                 <div>
                   <p class="font-semibold text-slate-800 dark:text-slate-200">Email</p>
                   <a href="mailto:moazj049@gmail.com" class="text-indigo-600 dark:text-indigo-400 hover:underline">
-                    moazj049@gmail.com
+                    moazdev047@gmail.com
                   </a>
                 </div>
               </div>
@@ -42,7 +42,7 @@ import Swal from 'sweetalert2';
                 <div>
                   <p class="font-semibold text-slate-800 dark:text-slate-200">Phone</p>
                   <a href="tel:03278031032" class="text-indigo-600 dark:text-indigo-400 hover:underline">
-                    03278031032
+                    +92 327 8031032
                   </a>
                 </div>
               </div>
