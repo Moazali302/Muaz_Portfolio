@@ -49,6 +49,7 @@ export interface ContactMessage {
   endDate?: string | null
   isCurrent: boolean
   description: string
+  responsibilities: string[]
   technologies: string[]
   companyUrl?: string
   order?: number

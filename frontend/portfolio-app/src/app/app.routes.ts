@@ -18,10 +18,15 @@ export const routes: Routes = [
     path: 'blog/:slug',
     loadComponent: () => import('./components/blog-post.component').then(m => m.BlogPostComponent)
   },
-  // Experience
+
+  // Experience list + Experience detail
   {
     path: 'experience',
-    loadComponent: () => import('./components/experience.component').then(m => m.ExperienceComponent)
+    loadComponent: () => import('./components/experience-list/experience-list').then(m => m.ExperienceComponent)
+  },
+  {
+    path: 'experience/:id',
+    loadComponent: () => import('./components/experience-detail/experience-detail').then(m => m.ExperienceDetailComponent)
   },
 
   // Contact

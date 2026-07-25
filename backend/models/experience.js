@@ -36,6 +36,10 @@ const experienceSchema = new mongoose.Schema({
     type: String,
     required: true
   },
+  responsibilities: [{
+    type: String,
+    trim: true
+  }],
   technologies: [{
     type: String,
     trim: true
