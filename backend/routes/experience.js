@@ -14,10 +14,10 @@ router.get('/', async (req, res) => {
   }
 });
 
-// ===== Get single experience =====
-router.get('/:id', async (req, res) => {
+// ===== Get single experience details by company slug (public) =====
+router.get('/experience-details/:slug', async (req, res) => {
   try {
-    const experience = await Experience.findById(req.params.id);
+    const experience = await Experience.findOne({ slug: req.params.slug });
     if (!experience) {
       return res.status(404).json({ error: 'Experience not found' });
     }
@@ -43,7 +43,7 @@ router.put('/:id', authenticateToken, async (req, res) => {
   try {
     const experience = await Experience.findByIdAndUpdate(req.params.id, req.body, {
       new: true,
-      runValidators: true
+      runValidators: true,
     });
     if (!experience) {
       return res.status(404).json({ error: 'Experience not found' });

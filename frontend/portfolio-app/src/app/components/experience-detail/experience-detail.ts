@@ -1,7 +1,6 @@
 import { Component, inject, OnInit, signal } from '@angular/core';
 import { CommonModule, DatePipe } from '@angular/common';
 import { ActivatedRoute, RouterModule } from '@angular/router';
-import { TranslateService } from '../../guards/services/translate.service';
 import { ApiService, Experience } from '../../guards/services/api.service';
 
 @Component({
@@ -19,20 +18,20 @@ export class ExperienceDetailComponent implements OnInit {
   error = signal(false);
 
   ngOnInit(): void {
-    const id = this.route.snapshot.paramMap.get('id');
-    if (id) {
-      this.loadExperience(id);
+    const slug = this.route.snapshot.paramMap.get('slug');
+    if (slug) {
+      this.loadExperience(slug);
     } else {
       this.error.set(true);
       this.loading.set(false);
     }
   }
 
-  loadExperience(id: string): void {
+  loadExperience(slug: string): void {
     this.loading.set(true);
     this.error.set(false);
 
-    this.apiService.getExperience(id).subscribe({
+    this.apiService.getExperience(slug).subscribe({
       next: (exp) => {
         this.experience.set(exp);
         this.loading.set(false);

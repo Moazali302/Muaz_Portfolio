@@ -6,6 +6,12 @@ const experienceSchema = new mongoose.Schema({
     required: true,
     trim: true
   },
+  slug: {
+    type: String,
+    unique: true,
+    trim: true,
+    lowercase: true
+  },
   role: {
     type: String,
     required: true,
@@ -54,6 +60,19 @@ const experienceSchema = new mongoose.Schema({
   }
 }, {
   timestamps: true
+});
+
+// Auto-generate slug from company name if not explicitly provided
+experienceSchema.pre('validate', function (next) {
+  if (!this.slug && this.company) {
+    this.slug = this.company
+      .toLowerCase()
+      .trim()
+      .replace(/\.[a-z]+$/i, '')     // drop trailing domain-like suffix e.g. ".com"
+      .replace(/[^a-z0-9]+/g, '-')   // non-alphanumeric -> hyphen
+      .replace(/^-+|-+$/g, '');      // trim leading/trailing hyphens
+  }
+  next();
 });
 
 module.exports = mongoose.model('Experience', experienceSchema);

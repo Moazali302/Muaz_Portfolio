@@ -25,7 +25,7 @@ export const routes: Routes = [
     loadComponent: () => import('./components/experience-list/experience-list').then(m => m.ExperienceComponent)
   },
   {
-    path: 'experience/:id',
+    path: 'experience/:slug',
     loadComponent: () => import('./components/experience-detail/experience-detail').then(m => m.ExperienceDetailComponent)
   },
 

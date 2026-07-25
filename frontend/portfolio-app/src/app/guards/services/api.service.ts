@@ -42,6 +42,7 @@ export interface ContactMessage {
  export interface Experience {
   _id?: string
   company: string
+  slug: string
   role: string
   employmentType: string
   location?: string
@@ -87,8 +88,8 @@ export class ApiService {
     return this.http.get<Experience[]>(`${this.apiUrl}/experience`)
   }
 
-  getExperience(id: string): Observable<Experience> {
-    return this.http.get<Experience>(`${this.apiUrl}/experience/${id}`)
+  getExperience(slug: string): Observable<Experience> {
+    return this.http.get<Experience>(`${this.apiUrl}/experience/experience-details/${slug}`)
   }
 
   // ----- Contact -----
