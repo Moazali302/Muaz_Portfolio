@@ -44,10 +44,12 @@ import { TranslateService } from '../guards/services/translate.service';
             </div>
             <h3 class="font-semibold text-base mb-3 text-slate-900 dark:text-slate-100">Specialization</h3>
             <div class="flex flex-wrap gap-2">
-              <span class="font-mono text-xs px-2 py-1 rounded-md bg-indigo-100 dark:bg-indigo-500/15 text-indigo-700 dark:text-indigo-300">Angular</span>
+              <span class="font-mono text-xs px-2 py-1 rounded-md bg-indigo-100 dark:bg-indigo-500/15 text-indigo-700 dark:text-indigo-300">Angular-V20+</span>
               <span class="font-mono text-xs px-2 py-1 rounded-md bg-indigo-100 dark:bg-indigo-500/15 text-indigo-700 dark:text-indigo-300">TypeScript</span>
               <span class="font-mono text-xs px-2 py-1 rounded-md bg-indigo-100 dark:bg-indigo-500/15 text-indigo-700 dark:text-indigo-300">RxJS</span>
+             <span class="font-mono text-xs px-2 py-1 rounded-md bg-indigo-100 dark:bg-indigo-500/15 text-indigo-700 dark:text-indigo-300">Reactive Forms</span>
               <span class="font-mono text-xs px-2 py-1 rounded-md bg-indigo-100 dark:bg-indigo-500/15 text-indigo-700 dark:text-indigo-300">ag-Grid</span>
+              <span class="font-mono text-xs px-2 py-1 rounded-md bg-indigo-100 dark:bg-indigo-500/15 text-indigo-700 dark:text-indigo-300">Signals</span>
             </div>
           </div>
 
@@ -62,6 +64,8 @@ import { TranslateService } from '../guards/services/translate.service';
             <h3 class="font-semibold text-base mb-3 text-slate-900 dark:text-slate-100">Experience</h3>
             <div class="flex flex-wrap gap-2">
               <span class="font-mono text-xs px-2 py-1 rounded-md bg-violet-100 dark:bg-violet-500/15 text-violet-700 dark:text-violet-300">Multi-Portal Systems</span>
+               <span class="font-mono text-xs px-2 py-1 rounded-md bg-violet-100 dark:bg-violet-500/15 text-violet-700 dark:text-violet-300">Web Applications</span>
+                <span class="font-mono text-xs px-2 py-1 rounded-md bg-violet-100 dark:bg-violet-500/15 text-violet-700 dark:text-violet-300">Api Integration</span>
               <span class="font-mono text-xs px-2 py-1 rounded-md bg-violet-100 dark:bg-violet-500/15 text-violet-700 dark:text-violet-300">RBAC</span>
               <span class="font-mono text-xs px-2 py-1 rounded-md bg-violet-100 dark:bg-violet-500/15 text-violet-700 dark:text-violet-300">i18n</span>
             </div>
@@ -79,6 +83,7 @@ import { TranslateService } from '../guards/services/translate.service';
             <h3 class="font-semibold text-base mb-3 text-slate-900 dark:text-slate-100">Approach</h3>
             <div class="flex flex-wrap gap-2">
               <span class="font-mono text-xs px-2 py-1 rounded-md bg-fuchsia-100 dark:bg-fuchsia-500/15 text-fuchsia-700 dark:text-fuchsia-300">Clean Code</span>
+              <span class="font-mono text-xs px-2 py-1 rounded-md bg-fuchsia-100 dark:bg-fuchsia-500/15 text-fuchsia-700 dark:text-fuchsia-300">Maintainable</span>
               <span class="font-mono text-xs px-2 py-1 rounded-md bg-fuchsia-100 dark:bg-fuchsia-500/15 text-fuchsia-700 dark:text-fuchsia-300">Scalable UI</span>
               <span class="font-mono text-xs px-2 py-1 rounded-md bg-fuchsia-100 dark:bg-fuchsia-500/15 text-fuchsia-700 dark:text-fuchsia-300">Production-Ready</span>
             </div>

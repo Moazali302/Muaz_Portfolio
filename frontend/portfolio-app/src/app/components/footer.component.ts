@@ -1,27 +1,28 @@
 import { Component, inject } from '@angular/core';
 import { CommonModule } from '@angular/common';
+import { RouterModule } from '@angular/router';
 import { TranslateService } from '../guards/services/translate.service';
 
 @Component({
   selector: 'app-footer',
   standalone: true,
-  imports: [CommonModule],
+  imports: [CommonModule, RouterModule],
   template: `
     <footer class="py-12 px-4 bg-slate-900 dark:bg-black text-slate-300">
       <div class="container mx-auto max-w-6xl">
         <div class="grid md:grid-cols-3 gap-8 mb-8">
           <div>
             <h3 class="text-xl font-bold mb-4 text-white">MoazAli</h3>
-            <p class="text-slate-400">Full Stack Developer & Student at Riphah International University</p>
+            <p class="text-slate-400">Frontend Developer specializing in Angular — building scalable, production-ready web applications.</p>
           </div>
           <div>
             <h4 class="text-lg font-semibold mb-4 text-white">Quick Links</h4>
             <ul class="space-y-2">
-              <li><a href="#hero" class="hover:text-indigo-400 transition-colors">Home</a></li>
-              <li><a href="#about" class="hover:text-indigo-400 transition-colors">About</a></li>
-              <li><a href="#projects" class="hover:text-indigo-400 transition-colors">Projects</a></li>
-              <li><a href="#blog" class="hover:text-indigo-400 transition-colors">Blog</a></li>
-              <li><a href="#contact" class="hover:text-indigo-400 transition-colors">Contact</a></li>
+              <li><a routerLink="/home" class="hover:text-indigo-400 transition-colors cursor-pointer">Home</a></li>
+              <li><a routerLink="/about" class="hover:text-indigo-400 transition-colors cursor-pointer">About</a></li>
+              <li><a routerLink="/projects" class="hover:text-indigo-400 transition-colors cursor-pointer">Projects</a></li>
+              <li><a routerLink="/blog" class="hover:text-indigo-400 transition-colors cursor-pointer">Blog</a></li>
+              <li><a routerLink="/contact" class="hover:text-indigo-400 transition-colors cursor-pointer">Contact</a></li>
             </ul>
           </div>
           <div>
@@ -57,4 +58,3 @@ import { TranslateService } from '../guards/services/translate.service';
 export class FooterComponent {
   translate = inject(TranslateService);
 }
-
