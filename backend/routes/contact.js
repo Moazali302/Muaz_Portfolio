@@ -9,9 +9,9 @@ const transporter = nodemailer.createTransport({
   host: process.env.SMTP_HOST || 'smtp.gmail.com',
   port: process.env.SMTP_PORT || 587,
   secure: false,
-  auth: {
-    user: process.env.SMTP_USER,
-    pass: process.env.SMTP_PASS
+   auth: {
+    user: process.env.EMAIL_USER,
+    pass: process.env.EMAIL_PASS
   }
 });
 
@@ -28,11 +28,11 @@ router.post('/', async (req, res) => {
     await contact.save();
 
     // Send email notification
-    if (process.env.SMTP_USER && process.env.SMTP_PASS) {
+    if (process.env.EMAIL_USER && process.env.EMAIL_PASS) {
       try {
         await transporter.sendMail({
-          from: process.env.SMTP_USER,
-          to: 'moazj049@gmail.com',
+          from: process.env.EMAIL_USER,
+          to: process.env.RECEIVER_EMAIL || process.env.EMAIL_USER,
           subject: `New Contact Form Message from ${name}`,
           html: `
             <h2>New Contact Form Submission</h2>
