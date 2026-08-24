@@ -30,7 +30,7 @@ import { ApiService, BlogPost } from '../guards/services/api.service';
 
             <div class="flex flex-wrap items-center gap-3 text-sm text-slate-500 dark:text-slate-500 mb-8 pb-8 border-b border-slate-200 dark:border-slate-700">
               <span class="font-mono">{{ p.createdAt ? (p.createdAt | date:'MMMM d, y') : '' }}</span>
-              <span>•</span>
+              <span>&bull;</span>
               <span>{{ readTime(p.body) }} min read</span>
               @for (tag of p.tags; track tag) {
                 <span class="px-2.5 py-1 text-xs font-medium rounded-full bg-indigo-100 dark:bg-indigo-900 text-indigo-700 dark:text-indigo-300">

@@ -29,7 +29,8 @@ import { ApiService, BlogPost } from '../guards/services/api.service';
         } @else {
           <div class="space-y-4">
             @for (post of posts(); track post._id) {
-               [routerLink]="['/blog', post.slug]"
+              <a
+                [routerLink]="['/blog', post.slug]"
                 class="block bg-white dark:bg-slate-800 border border-slate-200 dark:border-slate-700 rounded-xl p-6 hover:border-indigo-400 dark:hover:border-indigo-500 transition-colors duration-200"
               >
                 <div class="flex flex-col md:flex-row md:items-start md:justify-between gap-2">
@@ -53,13 +54,14 @@ import { ApiService, BlogPost } from '../guards/services/api.service';
                       {{ post.createdAt ? (post.createdAt | date:'MMM d, y') : '' }}
                     </span>
                     <span class="inline-flex items-center gap-1 text-indigo-600 dark:text-indigo-400 font-semibold text-sm">
-                      <a> ReadMore</a>
+                      Read more
                       <svg class="w-4 h-4" fill="none" stroke="currentColor" viewBox="0 0 24 24">
                         <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M17 8l4 4m0 0l-4 4m4-4H3" />
                       </svg>
                     </span>
                   </div>
                 </div>
+              </a>
             }
           </div>
         }
