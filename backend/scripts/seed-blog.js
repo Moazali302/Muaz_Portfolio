@@ -67,7 +67,8 @@ Fix: no frontend fix exists for missing data. I flagged it back to the backend t
 
 4. Not every bug is yours to fix. Confirming that a field was missing at the API layer — and saying so plainly — closed the loop faster than any frontend workaround would have.`,
     tags: ['Angular', 'Debugging', 'Root Cause Analysis'],
-    published: true
+    published: true,
+    createdAt: new Date('2026-01-15')
   },
   {
     title: 'Case Study: The Silent Form Control That Wasn\'t There',
@@ -118,7 +119,8 @@ Angular's *ngIf directive, when it destroys an element with a formControlName, a
 
 Whenever a formControlName or ngModel-bound element inside *ngIf toggles visibility at runtime, and preserving that field's value matters — use [hidden] instead of *ngIf.`,
     tags: ['Angular', 'Forms', 'Debugging'],
-    published: true
+    published: true,
+    createdAt: new Date('2026-02-22')
   },
   {
     title: 'Debugging a CORS Error That Wasn\'t Really About CORS',
@@ -176,30 +178,40 @@ This removes the implicit dependency on NODE_ENV matching the actual environment
 
 A CORS error in the browser console is a symptom, not a diagnosis. It means the response didn't include the right header — it doesn't tell you why. Checking the raw response headers directly, rather than trusting the browser's summary message, is usually the fastest way to find out which one it actually is.`,
     tags: ['Node.js', 'CORS', 'DevOps'],
-    published: true
+    published: true,
+    createdAt: new Date('2026-03-4')
   }
 ];
 
-async function seed() {
+  async function seed() {
   try {
     await mongoose.connect(process.env.MONGODB_URI);
     console.log('Connected to MongoDB');
 
     for (const post of posts) {
       const exists = await Blog.findOne({ slug: post.slug });
+
       if (exists) {
         await Blog.updateOne({ slug: post.slug }, post);
-        console.log('Updated:', post.title);
       } else {
         await Blog.create(post);
-        console.log('Created:', post.title);
       }
+
+      // Bypass Mongoose middleware entirely — timestamps plugin silently
+      // strips createdAt from $set on query-based updates, so use the
+      // native driver collection directly to force it through.
+      await Blog.collection.updateOne(
+        { slug: post.slug },
+        { $set: { createdAt: post.createdAt } }
+      );
+
+      console.log('Synced:', post.title, '→', post.createdAt);
     }
 
     console.log('Blog posts uploaded to database successfully');
     process.exit(0);
   } catch (error) {
-    console.error(' Error:', error);
+    console.error('Error:', error);
     process.exit(1);
   }
 }

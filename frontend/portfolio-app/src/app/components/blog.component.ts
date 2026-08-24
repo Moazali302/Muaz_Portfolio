@@ -51,7 +51,7 @@ import { ApiService, BlogPost } from '../guards/services/api.service';
                   </div>
                   <div class="flex md:flex-col md:items-end justify-between md:justify-start gap-2 md:gap-4 md:text-right md:min-w-[140px]">
                     <span class="text-sm text-slate-500 dark:text-slate-500 font-mono">
-                      {{ post.createdAt ? (post.createdAt | date:'MMM d, y') : '' }}
+                     {{ post.createdAt ? (post.createdAt | date:'MMM y') : '' }}
                     </span>
                     <span class="inline-flex items-center gap-1 text-indigo-600 dark:text-indigo-400 font-semibold text-sm">
                       Read more
