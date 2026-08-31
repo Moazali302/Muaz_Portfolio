@@ -1,5 +1,5 @@
 import { Component, inject } from '@angular/core';
-import{CommonModule} from '@angular/common';
+import { CommonModule } from '@angular/common';
 import { RouterLink, RouterLinkActive } from '@angular/router';
 import { TranslateService } from '../guards/services/translate.service';
 import { ThemeService } from '../guards/services/theme.service';
@@ -47,7 +47,7 @@ import { ThemeService } from '../guards/services/theme.service';
           </a>
         </div>
 
-        <div class="flex items-center gap-4">
+        <div class="flex items-center gap-2 sm:gap-4">
           <button
             (click)="translate.toggleLang()"
             class="p-2 rounded-lg hover:bg-slate-100 dark:hover:bg-slate-800 transition-colors"
@@ -68,12 +68,59 @@ import { ThemeService } from '../guards/services/theme.service';
                 d="M12 3v1m0 16v1m9-9h-1M4 12H3m15.364 6.364l-.707-.707M6.343 6.343l-.707-.707m12.728 0l-.707.707M6.343 17.657l-.707.707M16 12a4 4 0 11-8 0 4 4 0 018 0z" />
             </svg>
           </button>
+
+          <button
+            type="button"
+            class="md:hidden p-2 rounded-lg hover:bg-slate-100 dark:hover:bg-slate-800 transition-colors"
+            (click)="toggleMenu()"
+            [attr.aria-expanded]="isMenuOpen"
+            aria-label="Toggle navigation menu">
+            <svg class="w-6 h-6" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+              <path *ngIf="!isMenuOpen" stroke-linecap="round" stroke-linejoin="round" stroke-width="2"
+                d="M4 6h16M4 12h16M4 18h16" />
+              <path *ngIf="isMenuOpen" stroke-linecap="round" stroke-linejoin="round" stroke-width="2"
+                d="M6 18L18 6M6 6l12 12" />
+            </svg>
+          </button>
         </div>
       </nav>
+
+      <div *ngIf="isMenuOpen" class="md:hidden border-t border-slate-200 dark:border-slate-800 bg-white/95 dark:bg-slate-900/95 backdrop-blur-md">
+        <div class="container mx-auto px-4 py-4 flex flex-col gap-3">
+          <a
+            *ngFor="let item of navItems"
+            [routerLink]="item.route"
+            routerLinkActive="text-indigo-600 dark:text-indigo-400"
+            [routerLinkActiveOptions]="{ exact: item.exact }"
+            class="py-2 text-sm font-medium hover:text-indigo-600 dark:hover:text-indigo-400 transition-colors"
+            (click)="closeMenu()">
+            {{ translate.translate(item.key) }}
+          </a>
+        </div>
+      </div>
     </header>
   `
 })
 export class HeaderComponent {
   translate = inject(TranslateService);
   theme = inject(ThemeService);
+  isMenuOpen = false;
+
+  navItems = [
+    { route: '/home', key: 'nav.home', exact: true },
+    { route: '/about', key: 'nav.about', exact: false },
+    { route: '/skills', key: 'nav.skills', exact: false },
+    { route: '/projects', key: 'nav.projects', exact: false },
+    { route: '/experience', key: 'nav.experience', exact: false },
+    { route: '/blog', key: 'nav.blog', exact: false },
+    { route: '/contact', key: 'nav.contact', exact: false }
+  ];
+
+  toggleMenu(): void {
+    this.isMenuOpen = !this.isMenuOpen;
+  }
+
+  closeMenu(): void {
+    this.isMenuOpen = false;
+  }
 }
