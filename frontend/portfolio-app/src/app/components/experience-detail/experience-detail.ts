@@ -1,45 +1,75 @@
-import { Component, inject, OnInit, signal } from '@angular/core';
-import { CommonModule, DatePipe } from '@angular/common';
-import { ActivatedRoute, RouterModule } from '@angular/router';
+import { ChangeDetectionStrategy, Component, computed, effect, inject, input } from '@angular/core';
+import { DatePipe } from '@angular/common';
+import { toObservable, toSignal } from '@angular/core/rxjs-interop';
+import { Title } from '@angular/platform-browser';
+import { RouterLink } from '@angular/router';
+import { catchError, forkJoin, map, of, switchMap } from 'rxjs';
 import { ApiService, Experience } from '../../guards/services/api.service';
+import { TranslateService } from '../../guards/services/translate.service';
+import { ButtonDirective } from '../../shared/directives/button.directive';
+import { CardDirective } from '../../shared/directives/card.directive';
+import { RevealDirective } from '../../shared/directives/reveal.directive';
+import { ChipComponent } from '../../shared/ui/chip/chip.component';
+import { LoadState,toLoadState } from '../../shared/utlis/load-state';
+
+interface ExperienceView {
+  readonly experience: Experience;
+  readonly previous: Experience | null;
+  readonly next: Experience | null;
+}
+
+function withNeighbours(experience: Experience, all: Experience[]): ExperienceView {
+  const index = all.findIndex((item) => item._id === experience._id);
+  return {
+    experience,
+    previous: index > 0 ? all[index - 1] : null,
+    next: index >= 0 && index < all.length - 1 ? all[index + 1] : null,
+  };
+}
 
 @Component({
   selector: 'app-experience-detail',
   standalone: true,
-  imports: [CommonModule, DatePipe, RouterModule],
-  templateUrl: './experience-detail.html'
+  imports: [DatePipe, RouterLink, ButtonDirective, CardDirective, RevealDirective, ChipComponent],
+  changeDetection: ChangeDetectionStrategy.OnPush,
+  templateUrl: './experience-detail.html',
 })
-export class ExperienceDetailComponent implements OnInit {
-  private route = inject(ActivatedRoute);
-  private apiService = inject(ApiService);
+export class ExperienceDetailComponent {
+  protected readonly translate = inject(TranslateService);
+  private readonly api = inject(ApiService);
+  private readonly titleService = inject(Title);
 
-  experience = signal<Experience | null>(null);
-  loading = signal(true);
-  error = signal(false);
+  /** Bound from the `:slug` route param (withComponentInputBinding). */
+  readonly slug = input.required<string>();
 
-  ngOnInit(): void {
-    const slug = this.route.snapshot.paramMap.get('slug');
-    if (slug) {
-      this.loadExperience(slug);
-    } else {
-      this.error.set(true);
-      this.loading.set(false);
-    }
-  }
+  private readonly state = toSignal(
+    toObservable(this.slug).pipe(
+      switchMap((slug) =>
+        forkJoin({
+          experience: this.api.getExperience(slug),
+          all: this.api.getExperiences().pipe(catchError(() => of([] as Experience[]))),
+        }).pipe(
+          map(({ experience, all }) => withNeighbours(experience, all)),
+          toLoadState(),
+        ),
+      ),
+    ),
+    { initialValue: { status: 'loading' } as LoadState<ExperienceView> },
+  );
 
-  loadExperience(slug: string): void {
-    this.loading.set(true);
-    this.error.set(false);
+  protected readonly status = computed(() => this.state().status);
+  protected readonly view = computed(() => {
+    const state = this.state();
+    return state.status === 'ready' ? state.data : null;
+  });
 
-    this.apiService.getExperience(slug).subscribe({
-      next: (exp) => {
-        this.experience.set(exp);
-        this.loading.set(false);
-      },
-      error: (err) => {
-        console.error('Failed to load experience:', err);
-        this.error.set(true);
-        this.loading.set(false);
+  constructor() {
+    effect(() => {
+      const view = this.view();
+      if (view) {
+        this.titleService.setTitle(
+          `${view.experience.role} · ${view.experience.company} | MoazAli`,
+        );
       }
     });
   }

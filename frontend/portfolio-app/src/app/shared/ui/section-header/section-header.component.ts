@@ -15,6 +15,9 @@ const HEADING_CLASSES =
         } @else {
           <h2 [class]="headingClasses">{{ title() }}</h2>
         }
+        @if (subtitle()) {
+          <p class="mt-5 max-w-xl text-lg leading-relaxed text-ink-muted">{{ subtitle() }}</p>
+        }
       </div>
       <ng-content />
     </div>
@@ -23,6 +26,7 @@ const HEADING_CLASSES =
 export class SectionHeaderComponent {
   readonly eyebrow = input.required<string>();
   readonly title = input.required<string>();
+  readonly subtitle = input('');
   readonly level = input<1 | 2>(2);
 
   protected readonly headingClasses = HEADING_CLASSES;

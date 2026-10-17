@@ -1,5 +1,5 @@
 import { Injectable, inject } from '@angular/core'
-import { HttpClient } from '@angular/common/http'
+import { HttpClient,HttpParams } from '@angular/common/http'
 import { Observable } from 'rxjs'
 import { environment } from '../../../environments/environment'
 
@@ -55,6 +55,36 @@ export interface ContactMessage {
   companyUrl?: string
   order?: number
 }
+  export interface ProjectFeature {
+  title: string
+  description: string
+}
+
+export interface CaseStudy {
+  role?: string
+  timeline?: string
+  client?: string
+  overview?: string
+  challenge?: string
+  solution?: string
+  features?: ProjectFeature[]
+  gallery?: string[]
+}
+
+export interface Project {
+  _id: string
+  name: string
+  slug: string
+  category?: string
+  description: string
+  techStack: string[]
+  coverImage?: string
+  githubUrl?: string
+  liveUrl?: string
+  featured: boolean
+  order: number
+  caseStudy?: CaseStudy
+}
 
 // ---------- Service ----------
 @Injectable({
@@ -91,7 +121,20 @@ export class ApiService {
   getExperience(slug: string): Observable<Experience> {
     return this.http.get<Experience>(`${this.apiUrl}/experience/experience-details/${slug}`)
   }
-
+     // ----- Projects -----
+    getProjects(options: { featured?: boolean; limit?: number } = {}): Observable<Project[]> {
+    let params = new HttpParams()
+    if (options.featured) {
+      params = params.set('featured', true)
+    }
+    if (options.limit) {
+      params = params.set('limit', options.limit)
+    }
+    return this.http.get<Project[]>(`${this.apiUrl}/projects`, { params })
+  }
+    getProject(slug: string): Observable<Project> {
+    return this.http.get<Project>(`${this.apiUrl}/projects/${slug}`)
+  }
   // ----- Contact -----
   sendContactMessage(message: ContactMessage): Observable<{ message: string; id: string }> {
     return this.http.post<{ message: string; id: string }>(`${this.apiUrl}/contact`, message)

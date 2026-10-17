@@ -17,7 +17,6 @@ import { StatsStripComponent } from './stats-strip.component';
     <app-marquee [items]="skillNames" [label]="translate.translate('skills.title')" />
     <app-stats-strip />
     <app-about />
-    <!-- Replaced by the curated projects section in the Projects step -->
     <app-projects />
   `,
 })
