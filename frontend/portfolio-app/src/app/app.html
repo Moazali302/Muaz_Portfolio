@@ -1,7 +1,13 @@
-<div class="min-h-screen bg-white dark:bg-slate-900 transition-colors duration-200">
+<div class="min-h-screen bg-base font-body text-ink transition-colors duration-200">
+  <a
+    href="#main"
+    class="sr-only focus:not-sr-only focus:fixed focus:left-3 focus:top-3 focus:z-50 focus:rounded-full focus:bg-brand focus:px-4 focus:py-2 focus:text-brand-ink"
+  >
+    Skip to content
+  </a>
   <app-header></app-header>
-  <main>
+  <main id="main">
     <router-outlet></router-outlet>
   </main>
   <app-footer></app-footer>
-  </div>
+</div>

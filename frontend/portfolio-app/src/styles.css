@@ -2,6 +2,39 @@
 @tailwind components;
 @tailwind utilities;
 
+/* ---------- Design tokens (RGB channels, used by tailwind.config.js) ---------- */
+:root {
+  --c-base: 246 248 252;
+  --c-raised: 255 255 255;
+  --c-line: 221 227 240;
+  --c-line-strong: 195 204 224;
+  --c-ink: 15 23 42;
+  --c-ink-soft: 51 65 85;
+  --c-ink-muted: 91 103 133;
+  --c-brand: 13 148 136;
+  --c-brand-ink: 255 255 255;
+  --c-iris: 79 70 229;
+}
+
+.dark {
+  --c-base: 10 15 30;
+  --c-raised: 17 24 48;
+  --c-line: 30 41 68;
+  --c-line-strong: 44 58 92;
+  --c-ink: 232 236 245;
+  --c-ink-soft: 197 205 227;
+  --c-ink-muted: 154 164 191;
+  --c-brand: 94 234 212;
+  --c-brand-ink: 6 36 31;
+  --c-iris: 129 140 248;
+}
+
+@layer components {
+  .icon-btn {
+    @apply inline-flex h-[46px] min-w-[46px] items-center justify-center rounded-full border border-line-strong px-3.5 text-sm text-ink-soft transition-colors hover:border-brand hover:text-ink focus-visible:outline focus-visible:outline-2 focus-visible:outline-offset-2 focus-visible:outline-brand;
+  }
+}
+
 /* Custom styles */
 * {
   margin: 0;
@@ -14,7 +47,7 @@ html {
 }
 
 body {
-  font-family: 'Inter', -apple-system, BlinkMacSystemFont, 'Segoe UI', Roboto, sans-serif;
+  font-family: 'Manrope', 'Inter', -apple-system, BlinkMacSystemFont, 'Segoe UI', Roboto, sans-serif;
   -webkit-font-smoothing: antialiased;
   -moz-osx-font-smoothing: grayscale;
 }
@@ -39,6 +72,7 @@ body {
 .dark {
   color-scheme: dark;
 }
+
 /* Animation base styles */
 .revealed {
   opacity: 1 !important;
@@ -50,4 +84,21 @@ body {
 [appScrollReveal] {
   opacity: 0;
   transform: translateY(40px);
+}
+
+/* Hidden until RevealDirective scrolls the element into view */
+.reveal-pending {
+  opacity: 0;
+}
+
+@media (prefers-reduced-motion: reduce) {
+  *,
+  *::before,
+  *::after {
+    animation: none !important;
+    transition: none !important;
+  }
+  .reveal-pending {
+    opacity: 1;
+  }
 }

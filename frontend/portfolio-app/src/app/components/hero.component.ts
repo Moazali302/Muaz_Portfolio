@@ -1,214 +1,124 @@
-import { Component, ElementRef, inject, AfterViewInit } from '@angular/core';
-import { CommonModule } from '@angular/common';
+import { ChangeDetectionStrategy, Component, inject } from '@angular/core';
 import { RouterLink } from '@angular/router';
+import Swal from 'sweetalert2';
 import { TranslateService } from '../guards/services/translate.service';
 import { ApiService } from '../guards/services/api.service';
-import Swal from 'sweetalert2';
-import { trigger, style, animate, transition, state } from '@angular/animations';
+import { ButtonDirective } from '../shared/directives/button.directive';
+
+interface QuickStat {
+  readonly label: string;
+  readonly value: string;
+}
+
+const QUICK_STATS: readonly QuickStat[] = [
+  { label: 'Angular Developer', value: 'Enterprise Web Apps' },
+  { label: 'ag-Grid Expert', value: 'Hierarchical Data Systems' },
+  { label: 'RBAC & i18n', value: 'Multi-Portal Architecture' },
+  { label: 'Tailwind CSS', value: 'Responsive UI Styling' },
+];
 
 @Component({
   selector: 'app-hero',
   standalone: true,
-  imports: [CommonModule, RouterLink],
-  animations: [
-    trigger('fadeInUp', [
-      state('hidden', style({ opacity: 0, transform: 'translateY(50px)' })),
-      state('visible', style({ opacity: 1, transform: 'translateY(0)' })),
-      transition('hidden => visible', [animate('1000ms cubic-bezier(0.23, 1, 0.32, 1)')]),
-    ]),
-  ],
+  imports: [RouterLink, ButtonDirective],
+  changeDetection: ChangeDetectionStrategy.OnPush,
   template: `
     <section
       id="hero"
-      [@fadeInUp]="isVisible ? 'visible' : 'hidden'"
-      class="min-h-screen flex items-center justify-center px-4 pt-20 pb-12
-             bg-gradient-to-br from-indigo-50 via-purple-50 to-pink-50
-             dark:from-slate-900 dark:via-slate-800 dark:to-slate-900
-             transition-all duration-700"
+      class="mx-auto grid max-w-[1240px] items-center gap-14 px-6 pb-16 pt-6 lg:grid-cols-2 lg:gap-16 lg:px-8 lg:pb-24"
+      aria-labelledby="hero-title"
     >
-      <div class="container mx-auto max-w-6xl">
-        <div class="grid md:grid-cols-2 gap-12 items-center">
-          <!-- Left Side -->
-          <div>
-            <div
-              class="w-48 h-48 mx-auto md:mx-0 mb-8 rounded-full
-                     bg-gradient-to-br from-indigo-400 to-purple-600 p-[3px] shadow-2xl"
-            >
-              <div
-                class="w-full h-full rounded-full overflow-hidden bg-white dark:bg-slate-800
-                       flex items-center justify-center"
-              >
-                <img
-                  src="assets/profile.jpeg"
-                  alt="Moaz Ali Profile"
-                  class="w-full h-full object-cover rounded-full"
-                />
-              </div>
+      <div class="animate-reveal">
+        <div
+          class="mb-7 h-[132px] w-[132px] animate-float rounded-full bg-gradient-to-br from-brand to-iris p-1"
+        >
+          <img
+            src="assets/profile.jpeg"
+            width="132"
+            height="132"
+            fetchpriority="high"
+            alt="Moaz Ali Profile"
+            class="h-full w-full rounded-full bg-raised object-cover"
+          />
+        </div>
+
+        <p
+          class="inline-flex items-center gap-2.5 rounded-full border border-line-strong px-4 py-2 text-sm text-ink-soft"
+        >
+          <span class="h-2 w-2 animate-ping-soft rounded-full bg-brand" aria-hidden="true"></span>
+          {{ translate.translate('hero.education') }}
+        </p>
+
+        <h1
+          id="hero-title"
+          class="mb-6 mt-7 font-display text-[length:clamp(2.5rem,5.4vw,4.5rem)] leading-[1.04] tracking-tight"
+        >
+          {{ translate.translate('hero.headline.before')
+          }}<span class="text-brand">{{ translate.translate('hero.headline.highlight') }}</span
+          >{{ translate.translate('hero.headline.after') }}
+        </h1>
+
+        <p class="mb-9 max-w-xl text-lg leading-relaxed text-ink-muted">
+          {{ translate.translate('hero.summary') }}
+        </p>
+
+        <div class="flex flex-wrap gap-4">
+          <button appButton type="button" (click)="openHireEmail()">
+            {{ translate.translate('hero.hire') }}
+          </button>
+          <button appButton variant="outline" type="button" (click)="downloadResume()">
+            {{ translate.translate('hero.resume') }}
+          </button>
+          <a appButton variant="outline" routerLink="/contact">
+            {{ translate.translate('hero.contact') }}
+          </a>
+        </div>
+      </div>
+
+      <div class="animate-reveal [animation-delay:150ms]">
+        <div class="animate-float">
+          <section
+            class="flex flex-col gap-3.5 rounded-3xl border border-line bg-raised p-6 sm:p-7"
+            aria-labelledby="quick-stats-title"
+          >
+            <div class="flex gap-2" aria-hidden="true">
+              <span class="h-3 w-3 rounded-full bg-[#ff6b6b]"></span>
+              <span class="h-3 w-3 rounded-full bg-[#ffc857]"></span>
+              <span class="h-3 w-3 rounded-full bg-brand"></span>
             </div>
+            <h2 id="quick-stats-title" class="font-display text-2xl font-bold tracking-tight">
+              Quick Stats
+            </h2>
 
-            <h1
-              class="text-5xl md:text-6xl font-bold mb-4
-                     bg-gradient-to-r from-indigo-600 via-purple-600 to-pink-600
-                     bg-clip-text text-transparent"
-            >
-              {{ translate.translate('hero.title') }}
-            </h1>
-            <p class="text-2xl md:text-3xl text-slate-700 dark:text-slate-300 mb-2">
-              {{ translate.translate('hero.subtitle') }}
-            </p>
-            <p class="text-lg text-slate-600 dark:text-slate-400 mb-8">
-              {{ translate.translate('hero.education') }}
-            </p>
-
-            <!-- ✅ Hire / Resume / Contact Buttons -->
-            <div class="flex flex-wrap gap-4 mb-6">
-              <button
-                (click)="openHireEmail()"
-                class="px-6 py-3 bg-gradient-to-r from-indigo-600 to-purple-600 text-white rounded-lg
-                       font-semibold hover:shadow-lg transform hover:-translate-y-1 transition-all duration-200"
-              >
-                {{ translate.translate('hero.hire') }}
-              </button>
-
-              <button
-                (click)="downloadResume()"
-                class="px-6 py-3 border-2 border-indigo-600 dark:border-indigo-400
-                       text-indigo-600 dark:text-indigo-400 rounded-lg font-semibold
-                       hover:bg-indigo-50 dark:hover:bg-slate-800 transform hover:-translate-y-1
-                       transition-all duration-200"
-              >
-                {{ translate.translate('hero.resume') }}
-              </button>
-
-              <a
-                routerLink="/contact"
-                class="px-6 py-3 border-2 border-purple-600 dark:border-purple-400
-                       text-purple-600 dark:text-purple-400 rounded-lg font-semibold
-                       hover:bg-purple-50 dark:hover:bg-slate-800 transform hover:-translate-y-1
-                       transition-all duration-200"
-              >
-                {{ translate.translate('hero.contact') }}
-              </a>
-            </div>
-
-            <!-- ✅ Social Links -->
-            <div class="flex gap-4">
-              <a
-                href="https://github.com/Moazali302"
-                target="_blank"
-                class="text-slate-600 dark:text-slate-400 hover:text-indigo-600
-                       dark:hover:text-indigo-400 transition-colors"
-              >
-                <i class="fa-brands fa-github text-2xl"></i>
-              </a>
-              <a
-                href="https://www.linkedin.com/in/moaz-ali-4710ba397/"
-                target="_blank"
-                class="text-slate-600 dark:text-slate-400 hover:text-indigo-600
-                       dark:hover:text-indigo-400 transition-colors"
-              >
-                <i class="fa-brands fa-linkedin text-2xl"></i>
-              </a>
-            </div>
-          </div>
-
-          <!-- Right Side -->
-          <div class="hidden md:block">
-            <div class="relative">
-              <div
-                class="absolute inset-0 bg-gradient-to-r from-indigo-400 to-purple-600
-                       rounded-3xl transform rotate-6 opacity-20"
-              ></div>
-              <div class="relative bg-white dark:bg-slate-800 rounded-3xl p-8 shadow-2xl">
-                <h3 class="text-xl font-bold mb-4 text-slate-800 dark:text-slate-200">
-                  Quick Stats
-                </h3>
-                <div class="space-y-4">
-                  <div class="flex items-center gap-3">
-                    <div
-                      class="w-12 h-12 rounded-full bg-gradient-to-br from-indigo-500 to-purple-600 flex items-center justify-center text-white font-bold"
-                    >
-                      AN
-                    </div>
-                    <div>
-                      <p class="font-semibold text-slate-800 dark:text-slate-200">
-                        Angular Developer
-                      </p>
-                      <p class="text-sm text-slate-600 dark:text-slate-400">Enterprise Web Apps</p>
-                    </div>
-                  </div>
-
-                  <div class="flex items-center gap-3">
-                    <div
-                      class="w-12 h-12 rounded-full bg-gradient-to-br from-teal-500 to-cyan-600 flex items-center justify-center text-white font-bold"
-                    >
-                      AG
-                    </div>
-                    <div>
-                      <p class="font-semibold text-slate-800 dark:text-slate-200">ag-Grid Expert</p>
-                      <p class="text-sm text-slate-600 dark:text-slate-400">
-                        Hierarchical Data Systems
-                      </p>
-                    </div>
-                  </div>
-
-                  <div class="flex items-center gap-3">
-                    <div
-                      class="w-12 h-12 rounded-full bg-gradient-to-br from-pink-500 to-rose-600 flex items-center justify-center text-white font-bold"
-                    >
-                      RB
-                    </div>
-                    <div>
-                      <p class="font-semibold text-slate-800 dark:text-slate-200">RBAC & i18n</p>
-                      <p class="text-sm text-slate-600 dark:text-slate-400">
-                        Multi-Portal Architecture
-                      </p>
-                    </div>
-                  </div>
-
-                  <div class="flex items-center gap-3">
-                    <div
-                      class="w-12 h-12 rounded-full bg-gradient-to-br from-sky-500 to-blue-600 flex items-center justify-center text-white font-bold"
-                    >
-                      TW
-                    </div>
-                    <div>
-                      <p class="font-semibold text-slate-800 dark:text-slate-200">Tailwind CSS</p>
-                      <p class="text-sm text-slate-600 dark:text-slate-400">
-                        Responsive UI Styling
-                      </p>
-                    </div>
-                  </div>
-                </div>
-              </div>
-            </div>
-          </div>
+            <ul class="flex flex-col gap-3.5">
+              @for (stat of quickStats; track stat.label) {
+                <li class="rounded-[14px] border border-line-strong bg-base px-5 py-4">
+                  <p class="text-xs uppercase tracking-[0.08em] text-ink-muted">{{ stat.label }}</p>
+                  <p class="mt-1.5 font-display text-xl tracking-tight">{{ stat.value }}</p>
+                </li>
+                @if (!$last) {
+                  <li class="flex justify-center" aria-hidden="true">
+                    <span
+                      class="h-2.5 w-2.5 animate-ping-soft rounded-full"
+                      [class]="$even ? 'bg-brand' : 'bg-iris'"
+                    ></span>
+                  </li>
+                }
+              }
+            </ul>
+          </section>
         </div>
       </div>
     </section>
   `,
 })
-export class HeroComponent implements AfterViewInit {
-  translate = inject(TranslateService);
-  apiService = inject(ApiService);
-  private el = inject(ElementRef);
-  isVisible = false;
-
-  ngAfterViewInit() {
-    const observer = new IntersectionObserver(
-      ([entry]) => {
-        if (entry.isIntersecting) {
-          this.isVisible = true;
-          observer.unobserve(this.el.nativeElement);
-        }
-      },
-      { threshold: 0.3 },
-    );
-    observer.observe(this.el.nativeElement);
-  }
+export class HeroComponent {
+  protected readonly translate = inject(TranslateService);
+  private readonly apiService = inject(ApiService);
+  protected readonly quickStats = QUICK_STATS;
 
   // ✅ FINAL — Works in all browsers (no popup block)
-  openHireEmail() {
+  protected openHireEmail(): void {
     Swal.fire({
       title: 'Contact Moaz Ali',
       text: 'Would you like to open your email app to send a Hire Inquiry?',
@@ -257,7 +167,7 @@ export class HeroComponent implements AfterViewInit {
   }
 
   // ✅ Resume download
-  downloadResume(): void {
+  protected downloadResume(): void {
     Swal.fire({
       title: 'Downloading Resume',
       text: 'Please wait...',

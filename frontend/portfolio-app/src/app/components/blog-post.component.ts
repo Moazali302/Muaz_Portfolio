@@ -1,135 +1,268 @@
-import { Component, inject, OnInit, signal } from '@angular/core';
-import { CommonModule, DatePipe } from '@angular/common';
-import { ActivatedRoute, RouterLink } from '@angular/router';
-import { TranslateService } from '../guards/services/translate.service';
+import { ChangeDetectionStrategy, Component, computed, effect, inject, input, signal } from '@angular/core';
+import { DatePipe, DOCUMENT } from '@angular/common';
+import { toObservable, toSignal } from '@angular/core/rxjs-interop';
+import { Title } from '@angular/platform-browser';
+import { RouterLink } from '@angular/router';
+import { catchError, forkJoin, from, map, of, switchMap } from 'rxjs';
 import { ApiService, BlogPost } from '../guards/services/api.service';
+import { TranslateService } from '../guards/services/translate.service';
+import { ButtonDirective } from '../shared/directives/button.directive';
+import { CardDirective } from '../shared/directives/card.directive';
+import { RevealDirective } from '../shared/directives/reveal.directive';
+import { ChipComponent } from '../shared/ui/chip/chip.component';
+import { BodyBlock,estimateReadMinutes,parseBlogBody } from '../shared/utlis/blog-body';
+import { LoadState,toLoadState } from '../shared/utlis/load-state';
+import { Neighbours,neighboursOf } from '../shared/utlis/neighbours';
+
+interface PostView extends Neighbours<BlogPost> {
+  readonly post: BlogPost;
+  readonly blocks: BodyBlock[];
+  readonly minutes: number;
+}
+
+const COPIED_RESET_MS = 2000;
+const LINKEDIN_SHARE_URL = 'https://www.linkedin.com/sharing/share-offsite/?url=';
 
 @Component({
   selector: 'app-blog-post',
   standalone: true,
-  imports: [CommonModule, DatePipe, RouterLink],
+  imports: [DatePipe, RouterLink, ButtonDirective, CardDirective, RevealDirective, ChipComponent],
+  changeDetection: ChangeDetectionStrategy.OnPush,
   template: `
-    <section class="py-20 px-4 bg-gradient-to-br from-slate-50 to-indigo-50 dark:from-slate-900 dark:to-slate-800 min-h-screen">
-      <div class="container mx-auto max-w-3xl">
-        <a routerLink="/blog" class="inline-flex items-center gap-2 text-indigo-600 dark:text-indigo-400 font-semibold mb-8 hover:gap-3 transition-all">
-          <svg class="w-4 h-4" fill="none" stroke="currentColor" viewBox="0 0 24 24">
-            <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M15 19l-7-7 7-7" />
-          </svg>
-          Back to Blog
-        </a>
+    <div class="mx-auto max-w-[1240px] px-6 pb-8 lg:px-8">
+      <a
+        routerLink="/blog"
+        class="inline-flex items-center gap-2 text-[15px] text-ink-muted transition-colors hover:text-ink"
+      >
+        <span aria-hidden="true" class="inline-block rtl:rotate-180">←</span>
+        {{ translate.translate('blogPost.back') }}
+      </a>
 
-        @if (loading()) {
-          <div class="text-center py-12">
-            <div class="inline-block animate-spin rounded-full h-12 w-12 border-t-2 border-b-2 border-indigo-600"></div>
+      @switch (status()) {
+        @case ('loading') {
+          <div class="mt-10 space-y-6" aria-busy="true">
+            <div appCard class="h-10 w-2/3 animate-pulse"></div>
+            <div appCard class="h-[320px] animate-pulse"></div>
           </div>
-        } @else if (post(); as p) {
-          <article>
-            <h1 class="text-3xl md:text-4xl font-bold mb-4 bg-gradient-to-r from-indigo-600 to-purple-600 bg-clip-text text-transparent">
-              {{ p.title }}
-            </h1>
-
-            <div class="flex flex-wrap items-center gap-3 text-sm text-slate-500 dark:text-slate-500 mb-8 pb-8 border-b border-slate-200 dark:border-slate-700">
-              <span class="font-mono">{{ p.createdAt ? (p.createdAt | date:'MMMM y') : '' }}</span>              <span>&bull;</span>
-              <span>{{ readTime(p.body) }} min read</span>
-              @for (tag of p.tags; track tag) {
-                <span class="px-2.5 py-1 text-xs font-medium rounded-full bg-indigo-100 dark:bg-indigo-900 text-indigo-700 dark:text-indigo-300">
-                  {{ tag }}
-                </span>
+        }
+        @case ('error') {
+          <div appCard class="mt-10 flex flex-wrap items-center justify-between gap-4 p-8" role="alert">
+            <p class="text-ink-soft">{{ translate.translate('blogPost.notFound') }}</p>
+            <a appButton variant="outline" routerLink="/blog">
+              {{ translate.translate('blogPost.back') }}
+            </a>
+          </div>
+        }
+        @default {
+          @if (view(); as v) {
+            <header class="max-w-3xl animate-reveal pb-10 pt-8">
+              @if (v.post.tags.length) {
+                <ul class="mb-5 flex flex-wrap gap-2">
+                  @for (tag of v.post.tags; track tag) {
+                    <li><app-chip size="sm">{{ tag }}</app-chip></li>
+                  }
+                </ul>
               }
-            </div>
-
-            <div class="prose dark:prose-invert max-w-none">
-              @for (block of parsedBody(); track $index) {
-                @if (block.type === 'code') {
-                  <div class="bg-slate-900 rounded-lg overflow-hidden my-6 border border-slate-700">
-                    @if (block.lang) {
-                      <div class="px-4 py-2 text-xs text-slate-400 border-b border-slate-700 font-mono">{{ block.lang }}</div>
-                    }
-                    <pre class="p-4 overflow-x-auto text-sm text-slate-200 font-mono"><code>{{ block.content }}</code></pre>
-                  </div>
-                } @else if (block.type === 'heading') {
-                  <h2 class="text-xl md:text-2xl font-bold text-slate-800 dark:text-slate-200 mt-8 mb-3">{{ block.content }}</h2>
-                } @else {
-                  <p class="text-slate-600 dark:text-slate-400 leading-relaxed mb-4 whitespace-pre-line">{{ block.content }}</p>
+              <h1
+                class="mb-5 font-display text-[length:clamp(2.25rem,4.6vw,3.75rem)] leading-[1.1] tracking-tight"
+              >
+                {{ v.post.title }}
+              </h1>
+              <p class="text-ink-muted">
+                MoazAli
+                @if (v.post.createdAt) {
+                  · {{ v.post.createdAt | date: 'MMM y' }}
                 }
-              }
+                · {{ v.minutes }} {{ translate.translate('blogPost.minRead') }}
+              </p>
+            </header>
+
+            <div class="flex flex-wrap items-start gap-12">
+              <article class="min-w-0 flex-[2_1_520px]">
+                @for (block of v.blocks; track $index) {
+                  @if (block.type === 'code') {
+                    <div class="my-6 overflow-hidden rounded-[14px] border border-line bg-[#050810]">
+                      @if (block.lang) {
+                        <p class="border-b border-line px-5 py-2 font-mono text-xs text-slate-400">
+                          {{ block.lang }}
+                        </p>
+                      }
+                      <pre class="overflow-x-auto p-5 font-mono text-sm leading-relaxed text-slate-300" dir="ltr"><code>{{ block.content }}</code></pre>
+                    </div>
+                  } @else if (block.type === 'heading') {
+                    <h2
+                      [id]="block.id"
+                      class="mb-4 mt-12 scroll-mt-6 font-display text-[1.75rem] tracking-tight"
+                    >
+                      {{ block.content }}
+                    </h2>
+                  } @else {
+                    <p class="mb-5 whitespace-pre-line text-[17px] leading-[1.75] text-ink-soft">
+                      {{ block.content }}
+                    </p>
+                  }
+                }
+              </article>
+
+              <aside class="flex min-w-0 flex-[1_1_280px] flex-col gap-5">
+                @if (headings().length) {
+                  <nav appCard class="p-7" [attr.aria-label]="translate.translate('blogPost.onThisPage')">
+                    <p class="mb-4 text-xs uppercase tracking-[0.08em] text-ink-muted">
+                      {{ translate.translate('blogPost.onThisPage') }}
+                    </p>
+                    <ul class="flex flex-col gap-3.5 text-[15px]">
+                      @for (heading of headings(); track heading.id) {
+                        <li>
+                          <button
+                            type="button"
+                            class="text-start text-ink-muted transition-colors hover:text-brand"
+                            (click)="scrollTo(heading.id)"
+                          >
+                            {{ heading.content }}
+                          </button>
+                        </li>
+                      }
+                    </ul>
+                  </nav>
+                }
+
+                <div appCard class="p-7">
+                  <p class="mb-4 text-xs uppercase tracking-[0.08em] text-ink-muted">
+                    {{ translate.translate('blogPost.author') }}
+                  </p>
+                  <div class="flex items-center gap-3.5">
+                    <span
+                      class="h-[52px] w-[52px] shrink-0 rounded-full bg-gradient-to-br from-brand to-iris"
+                      aria-hidden="true"
+                    ></span>
+                    <div>
+                      <p class="font-semibold">MoazAli</p>
+                      <p class="text-sm text-ink-muted">{{ translate.translate('blogPost.authorRole') }}</p>
+                    </div>
+                  </div>
+                </div>
+
+                <div appCard class="p-7">
+                  <p class="mb-4 text-xs uppercase tracking-[0.08em] text-ink-muted">
+                    {{ translate.translate('blogPost.share') }}
+                  </p>
+                  <div class="flex flex-wrap gap-2.5">
+                    <button type="button" class="icon-btn" (click)="shareOnLinkedIn()">
+                      {{ translate.translate('blogPost.shareLinkedIn') }}
+                    </button>
+                    <button type="button" class="icon-btn" (click)="copyLink()" aria-live="polite">
+                      {{ translate.translate(copied() ? 'blogPost.copied' : 'blogPost.copyLink') }}
+                    </button>
+                  </div>
+                </div>
+              </aside>
             </div>
-          </article>
-        } @else {
-          <div class="text-center py-12 text-slate-600 dark:text-slate-400">
-            Blog post not found.
-          </div>
+
+            @if (v.previous || v.next) {
+              <nav
+                class="mt-20 grid gap-4 sm:grid-cols-2"
+                [attr.aria-label]="translate.translate('blog.eyebrow')"
+              >
+                @if (v.previous; as prev) {
+                  <a appCard [routerLink]="['/blog', prev.slug]" class="block p-6">
+                    <span class="block text-[13px] text-ink-muted">
+                      <span aria-hidden="true" class="inline-block rtl:rotate-180">←</span>
+                      {{ translate.translate('blogPost.previous') }}
+                    </span>
+                    <span class="mt-2 block font-display text-lg leading-snug tracking-tight">
+                      {{ prev.title }}
+                    </span>
+                  </a>
+                } @else {
+                  <span></span>
+                }
+                @if (v.next; as next) {
+                  <a appCard [routerLink]="['/blog', next.slug]" class="block p-6 sm:text-end">
+                    <span class="block text-[13px] text-ink-muted">
+                      {{ translate.translate('blogPost.next') }}
+                      <span aria-hidden="true" class="inline-block rtl:rotate-180">→</span>
+                    </span>
+                    <span class="mt-2 block font-display text-lg leading-snug tracking-tight">
+                      {{ next.title }}
+                    </span>
+                  </a>
+                }
+              </nav>
+            }
+          }
         }
-      </div>
-    </section>
-  `
-})
-export class BlogPostComponent implements OnInit {
-  route = inject(ActivatedRoute);
-  translate = inject(TranslateService);
-  apiService = inject(ApiService);
-
-  post = signal<BlogPost | null>(null);
-  loading = signal(true);
-
-  ngOnInit(): void {
-    const slug = this.route.snapshot.paramMap.get('slug');
-    if (slug) {
-      this.apiService.getBlogPost(slug).subscribe({
-        next: (post) => {
-          this.post.set(post);
-          this.loading.set(false);
-        },
-        error: (err) => {
-          console.error('Failed to load blog post:', err);
-          this.loading.set(false);
-        }
-      });
-    }
-  }
-
-  readTime(body: string): number {
-    const words = body.trim().split(/\s+/).length;
-    return Math.max(1, Math.round(words / 200));
-  }
-
-  parsedBody(): { type: 'text' | 'heading' | 'code'; content: string; lang?: string }[] {
-    const post = this.post();
-    if (!post) return [];
-
-    const blocks: { type: 'text' | 'heading' | 'code'; content: string; lang?: string }[] = [];
-    const lines = post.body.split('\n');
-    let i = 0;
-
-    while (i < lines.length) {
-      const line = lines[i];
-
-      if (line.trim().startsWith('```')) {
-        const lang = line.trim().replace(/```/g, '').trim();
-        const codeLines: string[] = [];
-        i++;
-        while (i < lines.length && !lines[i].trim().startsWith('```')) {
-          codeLines.push(lines[i]);
-          i++;
-        }
-        blocks.push({ type: 'code', content: codeLines.join('\n'), lang });
-        i++;
-      } else if (line.trim().startsWith('## ')) {
-        blocks.push({ type: 'heading', content: line.replace(/^##\s*/, '') });
-        i++;
-      } else if (line.trim() === '') {
-        i++;
-      } else {
-        const paragraphLines: string[] = [line];
-        i++;
-        while (i < lines.length && lines[i].trim() !== '' && !lines[i].trim().startsWith('```') && !lines[i].trim().startsWith('## ')) {
-          paragraphLines.push(lines[i]);
-          i++;
-        }
-        blocks.push({ type: 'text', content: paragraphLines.join('\n') });
       }
-    }
+    </div>
+  `,
+})
+export class BlogPostComponent {
+  protected readonly translate = inject(TranslateService);
+  private readonly api = inject(ApiService);
+  private readonly titleService = inject(Title);
+  private readonly document = inject(DOCUMENT);
 
-    return blocks;
+  /** Bound from the `:slug` route param (withComponentInputBinding). */
+  readonly slug = input.required<string>();
+
+  protected readonly copied = signal(false);
+
+  private readonly state = toSignal(
+    toObservable(this.slug).pipe(
+      switchMap((slug) =>
+        forkJoin({
+          post: this.api.getBlogPost(slug),
+          all: this.api.getBlogPosts().pipe(catchError(() => of([] as BlogPost[]))),
+        }).pipe(
+          map(({ post, all }): PostView => ({
+            post,
+            blocks: parseBlogBody(post.body),
+            minutes: estimateReadMinutes(post.body),
+            ...neighboursOf(all, (item) => item._id === post._id),
+          })),
+          toLoadState(),
+        ),
+      ),
+    ),
+    { initialValue: { status: 'loading' } as LoadState<PostView> },
+  );
+
+  protected readonly status = computed(() => this.state().status);
+  protected readonly view = computed(() => {
+    const state = this.state();
+    return state.status === 'ready' ? state.data : null;
+  });
+
+  protected readonly headings = computed(() =>
+    (this.view()?.blocks ?? []).filter(
+      (block): block is Extract<BodyBlock, { type: 'heading' }> => block.type === 'heading',
+    ),
+  );
+
+  constructor() {
+    effect(() => {
+      const view = this.view();
+      if (view) {
+        this.titleService.setTitle(`${view.post.title} | MoazAli`);
+      }
+    });
+  }
+
+  protected scrollTo(id: string): void {
+    this.document.getElementById(id)?.scrollIntoView({ block: 'start' });
+  }
+
+  protected shareOnLinkedIn(): void {
+    const url = encodeURIComponent(this.document.location.href);
+    window.open(`${LINKEDIN_SHARE_URL}${url}`, '_blank', 'noopener,noreferrer');
+  }
+
+  protected async copyLink(): Promise<void> {
+    try {
+      await navigator.clipboard.writeText(this.document.location.href);
+    } catch {
+      return; // clipboard unavailable (insecure context / permission denied)
+    }
+    this.copied.set(true);
+    setTimeout(() => this.copied.set(false), COPIED_RESET_MS);
   }
 }

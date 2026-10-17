@@ -1,96 +1,124 @@
-import { Component, inject, OnInit, signal } from '@angular/core';
-import { CommonModule, DatePipe } from '@angular/common';
+import { ChangeDetectionStrategy, Component, computed, inject } from '@angular/core';
+import { DatePipe } from '@angular/common';
+import { toSignal } from '@angular/core/rxjs-interop';
 import { RouterLink } from '@angular/router';
-import { TranslateService } from '../guards/services/translate.service';
+import { BehaviorSubject, switchMap } from 'rxjs';
 import { ApiService, BlogPost } from '../guards/services/api.service';
+import { TranslateService } from '../guards/services/translate.service';
+import { ButtonDirective } from '../shared/directives/button.directive';
+import { CardDirective } from '../shared/directives/card.directive';
+import { RevealDirective } from '../shared/directives/reveal.directive';
+import { ChipComponent } from '../shared/ui/chip/chip.component';
+import { SectionHeaderComponent } from '../shared/ui/section-header/section-header.component';
+import { LoadState,toLoadState } from '../shared/utlis/load-state';
+
+const SKELETON_COUNT = 3;
+const VISIBLE_TAGS = 3;
 
 @Component({
   selector: 'app-blog',
   standalone: true,
-  imports: [CommonModule, RouterLink, DatePipe],
+  imports: [
+    DatePipe,
+    RouterLink,
+    ButtonDirective,
+    CardDirective,
+    RevealDirective,
+    ChipComponent,
+    SectionHeaderComponent,
+  ],
+  changeDetection: ChangeDetectionStrategy.OnPush,
   template: `
-    <section id="blog" class="py-20 px-4 bg-gradient-to-br from-slate-50 to-indigo-50 dark:from-slate-900 dark:to-slate-800 min-h-screen">
-      <div class="container mx-auto max-w-4xl">
-        <h1 class="text-4xl md:text-5xl font-bold mb-3 bg-gradient-to-r from-indigo-600 to-purple-600 bg-clip-text text-transparent">
-          {{ translate.translate('blog.title') }}
-        </h1>
-        <p class="text-slate-600 dark:text-slate-400 mb-12">
-          Thoughts, learnings, and real debugging stories from production.
-        </p>
+    <section id="blog" class="mx-auto max-w-[1000px] px-6 pt-6 lg:px-8 lg:pt-10">
+      <app-section-header
+        class="block animate-reveal"
+        [level]="1"
+        [eyebrow]="translate.translate('blog.eyebrow')"
+        [title]="translate.translate('blog.heading')"
+        [subtitle]="translate.translate('blog.subheading')"
+      />
 
-        @if (loading()) {
-          <div class="text-center py-12">
-            <div class="inline-block animate-spin rounded-full h-12 w-12 border-t-2 border-b-2 border-indigo-600"></div>
-          </div>
-        } @else if (posts().length === 0) {
-          <div class="text-center py-12 text-slate-600 dark:text-slate-400">
-            No blog posts yet. Check back soon!
-          </div>
-        } @else {
-          <div class="space-y-4">
-            @for (post of posts(); track post._id) {
-              <a
-                [routerLink]="['/blog', post.slug]"
-                class="block bg-white dark:bg-slate-800 border border-slate-200 dark:border-slate-700 rounded-xl p-6 hover:border-indigo-400 dark:hover:border-indigo-500 transition-colors duration-200"
-              >
-                <div class="flex flex-col md:flex-row md:items-start md:justify-between gap-2">
-                  <div class="flex-1">
-                    <h2 class="text-xl md:text-2xl font-bold text-slate-800 dark:text-slate-200 mb-2">
-                      {{ post.title }}
-                    </h2>
-                    <p class="text-slate-600 dark:text-slate-400 mb-4">
-                      {{ post.excerpt }}
-                    </p>
-                    <div class="flex flex-wrap items-center gap-2">
-                      @for (tag of post.tags.slice(0, 3); track tag) {
-                        <span class="px-2.5 py-1 text-xs font-medium rounded-full bg-indigo-100 dark:bg-indigo-900 text-indigo-700 dark:text-indigo-300">
-                          {{ tag }}
-                        </span>
-                      }
-                    </div>
-                  </div>
-                  <div class="flex md:flex-col md:items-end justify-between md:justify-start gap-2 md:gap-4 md:text-right md:min-w-[140px]">
-                    <span class="text-sm text-slate-500 dark:text-slate-500 font-mono">
-                     {{ post.createdAt ? (post.createdAt | date:'MMM y') : '' }}
-                    </span>
-                    <span class="inline-flex items-center gap-1 text-indigo-600 dark:text-indigo-400 font-semibold text-sm">
-                      Read more
-                      <svg class="w-4 h-4" fill="none" stroke="currentColor" viewBox="0 0 24 24">
-                        <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M17 8l4 4m0 0l-4 4m4-4H3" />
-                      </svg>
-                    </span>
-                  </div>
-                </div>
-              </a>
+      @switch (status()) {
+        @case ('loading') {
+          <ul class="flex flex-col gap-5" aria-busy="true">
+            @for (_ of skeletons; track $index) {
+              <li appCard class="h-[200px] animate-pulse"></li>
             }
+          </ul>
+        }
+        @case ('error') {
+          <div appCard class="flex flex-wrap items-center justify-between gap-4 p-8" role="alert">
+            <p class="text-ink-soft">{{ translate.translate('blog.error') }}</p>
+            <button appButton variant="outline" type="button" (click)="reload()">
+              {{ translate.translate('common.retry') }}
+            </button>
           </div>
         }
-      </div>
+        @default {
+          @if (posts().length === 0) {
+            <p class="text-ink-muted">{{ translate.translate('blog.empty') }}</p>
+          } @else {
+            <ul class="flex flex-col gap-5">
+              @for (post of posts(); track post._id) {
+                <li appReveal [appRevealDelay]="$index * 120">
+                  <a
+                    appCard
+                    [routerLink]="['/blog', post.slug]"
+                    class="grid gap-x-8 gap-y-3 p-6 sm:grid-cols-[1fr_auto] sm:px-8 sm:py-7"
+                  >
+                    <h2 class="font-display text-2xl leading-snug tracking-tight sm:text-[1.625rem]">
+                      {{ post.title }}
+                    </h2>
+                    <p class="font-mono text-sm text-ink-muted sm:text-end">
+                      {{ post.createdAt ? (post.createdAt | date: 'MMM y') : '' }}
+                    </p>
+
+                    <p class="leading-relaxed text-ink-muted">{{ post.excerpt }}</p>
+                    <span
+                      class="inline-flex items-center gap-1.5 font-semibold text-brand sm:justify-self-end"
+                    >
+                      {{ translate.translate('blog.read') }}
+                      <span aria-hidden="true" class="inline-block rtl:rotate-180">→</span>
+                    </span>
+
+                    <ul class="flex flex-wrap gap-2 sm:col-span-2" aria-label="Tags">
+                      @for (tag of visibleTags(post); track tag) {
+                        <li><app-chip size="sm">{{ tag }}</app-chip></li>
+                      }
+                    </ul>
+                  </a>
+                </li>
+              }
+            </ul>
+          }
+        }
+      }
     </section>
-  `
+  `,
 })
-export class BlogComponent implements OnInit {
-  translate = inject(TranslateService);
-  apiService = inject(ApiService);
+export class BlogComponent {
+  protected readonly translate = inject(TranslateService);
+  private readonly api = inject(ApiService);
+  private readonly reload$ = new BehaviorSubject<void>(undefined);
 
-  posts = signal<BlogPost[]>([]);
-  loading = signal(true);
+  protected readonly skeletons = Array.from({ length: SKELETON_COUNT });
 
-  ngOnInit(): void {
-    this.loadPosts();
+  private readonly state = toSignal(
+    this.reload$.pipe(switchMap(() => this.api.getBlogPosts().pipe(toLoadState()))),
+    { initialValue: { status: 'loading' } as LoadState<BlogPost[]> },
+  );
+
+  protected readonly status = computed(() => this.state().status);
+  protected readonly posts = computed(() => {
+    const state = this.state();
+    return state.status === 'ready' ? state.data : [];
+  });
+
+  protected visibleTags(post: BlogPost): string[] {
+    return post.tags.slice(0, VISIBLE_TAGS);
   }
 
-  loadPosts(): void {
-    this.loading.set(true);
-    this.apiService.getBlogPosts().subscribe({
-      next: (posts) => {
-        this.posts.set(posts);
-        this.loading.set(false);
-      },
-      error: (err) => {
-        console.error('Failed to load blog posts:', err);
-        this.loading.set(false);
-      }
-    });
+  protected reload(): void {
+    this.reload$.next();
   }
 }
