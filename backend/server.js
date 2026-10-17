@@ -45,6 +45,7 @@ app.use('/api/auth', require('./routes/auth'));
 app.use('/api/github', require('./routes/github'));
 app.use('/api/blog', require('./routes/blog'));
 app.use('/api/experience', require('./routes/experience'));
+app.use('/api/projects', require('./routes/projects'));
 app.use('/api/contact', require('./routes/contact'));
 app.use('/api/upload', require('./routes/upload'));
 app.use('/api/newsletter', require('./routes/newsletter'));
