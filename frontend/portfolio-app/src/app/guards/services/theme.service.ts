@@ -1,22 +1,19 @@
 import { Injectable, signal, effect } from '@angular/core';
 
+type Theme = 'light' | 'dark';
+
 @Injectable({
   providedIn: 'root'
 })
 export class ThemeService {
   private readonly THEME_KEY = 'portfolio-theme';
-  theme = signal<'light' | 'dark'>('light');
+  theme = signal<Theme>('dark');
 
   constructor() {
-    // Load theme from localStorage
-    const savedTheme = localStorage.getItem(this.THEME_KEY) as 'light' | 'dark' | null;
-    if (savedTheme) {
+    // Load a previously saved choice; otherwise stay on the default (dark)
+    const savedTheme = localStorage.getItem(this.THEME_KEY);
+    if (savedTheme === 'light' || savedTheme === 'dark') {
       this.theme.set(savedTheme);
-    } else {
-      // Check system preference
-      if (window.matchMedia('(prefers-color-scheme: dark)').matches) {
-        this.theme.set('dark');
-      }
     }
 
     // Apply theme whenever it changes
@@ -34,13 +31,7 @@ export class ThemeService {
     this.theme.set(this.theme() === 'light' ? 'dark' : 'light');
   }
 
-  private applyTheme(theme: 'light' | 'dark'): void {
-    const html = document.documentElement;
-    if (theme === 'dark') {
-      html.classList.add('dark');
-    } else {
-      html.classList.remove('dark');
-    }
+  private applyTheme(theme: Theme): void {
+    document.documentElement.classList.toggle('dark', theme === 'dark');
   }
 }
-

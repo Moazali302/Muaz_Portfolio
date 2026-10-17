@@ -1,4 +1,6 @@
 /** @type {import('tailwindcss').Config} */
+// Theme-aware colors: RGB channels live in styles.css so opacity modifiers (bg-brand/30) work.
+const token = (name) => `rgb(var(--c-${name}) / <alpha-value>)`;
 module.exports = {
   content: [
     "./src/**/*.{html,ts,css}",
@@ -48,6 +50,35 @@ module.exports = {
           800: '#115e59',
           900: '#134e4a',
         },
+        base: token('base'),
+        raised: token('raised'),
+        line: token('line'),
+        'line-strong': token('line-strong'),
+        ink: token('ink'),
+        'ink-soft': token('ink-soft'),
+        'ink-muted': token('ink-muted'),
+        brand: token('brand'),
+        'brand-ink': token('brand-ink'),
+        iris: token('iris'),
+      },
+             fontFamily: {
+        display: ['"Space Grotesk"', 'ui-sans-serif', 'system-ui', 'sans-serif'],
+        body: ['Manrope', 'ui-sans-serif', 'system-ui', 'sans-serif'],
+      },
+      keyframes: {
+        reveal: {
+          from: { opacity: '0', transform: 'translateY(28px)' },
+          to: { opacity: '1', transform: 'none' },
+        },
+        marquee: { to: { transform: 'translateX(-50%)' } },
+        float: { '50%': { transform: 'translateY(-12px)' } },
+        'ping-soft': { '50%': { opacity: '0.3', transform: 'scale(1.6)' } },
+      },
+      animation: {
+        reveal: 'reveal 0.9s ease backwards',
+        marquee: 'marquee 28s linear infinite',
+        float: 'float 6s ease-in-out infinite',
+        'ping-soft': 'ping-soft 2s ease-in-out infinite',
       },
     },
   },

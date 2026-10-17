@@ -1,32 +1,47 @@
 <!doctype html>
-<html lang="en">
+<html lang="en" class="dark">
 <head>
   <meta charset="utf-8">
   <title>MoazAli - Portfolio | Full Stack Developer</title>
   <base href="/">
   <meta name="viewport" content="width=device-width, initial-scale=1">
-  <meta name="description" content="MoazAli - Full Stack Developer & Student at Riphah International University. View my projects, blog posts, and get in touch.">
-  <meta name="keywords" content="MoazAli, Full stack  developer, portfolio, Angular, Node.js, MongoDB">
+  <meta name="description" content="MoazAli - Full Stack Developer (Angular & NestJS). View my projects, blog posts, and get in touch.">
+  <meta name="keywords" content="MoazAli, Full stack developer, portfolio, Angular, NestJS, Node.js, MongoDB">
   <meta name="author" content="MoazAli">
-  
+
+  <!-- Apply the saved theme before first paint (dark by default) to avoid a flash -->
+  <script>
+    (function () {
+      try {
+        if (localStorage.getItem('portfolio-theme') !== 'light') {
+          document.documentElement.classList.add('dark');
+        } else {
+          document.documentElement.classList.remove('dark');
+        }
+      } catch (e) {
+        document.documentElement.classList.add('dark');
+      }
+    })();
+  </script>
+
   <!-- Open Graph / Facebook -->
   <meta property="og:type" content="website">
-  <meta property="og:url" content="https://moazali.portfolio.com/">
+  <meta property="og:url" content="https://moaz-ali-portfolio.vercel.app/">
   <meta property="og:title" content="MoazAli - Portfolio | Full Stack Developer">
-  <meta property="og:description" content="Full Stack Developer & Student at Riphah International University">
-  <meta property="og:image" content="/assets/profile.jpg">
-  
+  <meta property="og:description" content="Full Stack Developer (Angular & NestJS)">
+  <meta property="og:image" content="/assets/profile.jpeg">
+
   <!-- Twitter -->
   <meta property="twitter:card" content="summary_large_image">
-  <meta property="twitter:url" content="https://moazali.portfolio.com/">
+  <meta property="twitter:url" content="https://moaz-ali-portfolio.vercel.app/">
   <meta property="twitter:title" content="MoazAli - Portfolio | Full Stack Developer">
-  <meta property="twitter:description" content="Full Stack Developer & Student at Riphah International University">
-  <meta property="twitter:image" content="/assets/profile.jpg">
-  
+  <meta property="twitter:description" content="Full Stack Developer (Angular & NestJS)">
+  <meta property="twitter:image" content="/assets/profile.jpeg">
+
   <link rel="icon" type="image/x-icon" href="favicon.ico">
   <link rel="preconnect" href="https://fonts.googleapis.com">
   <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
-  <link href="https://fonts.googleapis.com/css2?family=Inter:wght@300;400;500;600;700;800;900&display=swap" rel="stylesheet">
+  <link href="https://fonts.googleapis.com/css2?family=Manrope:wght@400;500;600&family=Space+Grotesk:wght@500;700&display=swap" rel="stylesheet">
   <link href="https://cdn.jsdelivr.net/npm/sweetalert2@11/dist/sweetalert2.min.css" rel="stylesheet">
 </head>
 <body>

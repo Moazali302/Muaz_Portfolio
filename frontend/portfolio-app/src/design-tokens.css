@@ -1,0 +1,78 @@
+/* Design tokens: dark palette is the approved design, light palette is the fallback. */
+@theme inline {
+  --color-base: var(--c-base);
+  --color-raised: var(--c-raised);
+  --color-line: var(--c-line);
+  --color-line-strong: var(--c-line-strong);
+  --color-ink: var(--c-ink);
+  --color-ink-soft: var(--c-ink-soft);
+  --color-ink-muted: var(--c-ink-muted);
+  --color-accent: var(--c-accent);
+  --color-accent-ink: var(--c-accent-ink);
+  --color-secondary: var(--c-secondary);
+}
+
+@theme {
+  --font-display: "Space Grotesk", ui-sans-serif, system-ui, sans-serif;
+  --font-body: "Manrope", ui-sans-serif, system-ui, sans-serif;
+
+  --animate-reveal: reveal 0.9s ease both;
+  --animate-marquee: marquee 28s linear infinite;
+  --animate-float: float 6s ease-in-out infinite;
+  --animate-ping-soft: ping-soft 2s ease-in-out infinite;
+
+  @keyframes reveal {
+    from { opacity: 0; transform: translateY(28px); }
+    to { opacity: 1; transform: none; }
+  }
+  @keyframes marquee {
+    to { transform: translateX(-50%); }
+  }
+  @keyframes float {
+    50% { transform: translateY(-12px); }
+  }
+  @keyframes ping-soft {
+    50% { opacity: 0.3; transform: scale(1.6); }
+  }
+}
+
+:root {
+  --c-base: #f6f8fc;
+  --c-raised: #ffffff;
+  --c-line: #dde3f0;
+  --c-line-strong: #c3cce0;
+  --c-ink: #0f172a;
+  --c-ink-soft: #334155;
+  --c-ink-muted: #5b6785;
+  --c-accent: #0d9488;
+  --c-accent-ink: #ffffff;
+  --c-secondary: #4f46e5;
+}
+
+.dark {
+  --c-base: #0a0f1e;
+  --c-raised: #111830;
+  --c-line: #1e2944;
+  --c-line-strong: #2c3a5c;
+  --c-ink: #e8ecf5;
+  --c-ink-soft: #c5cde3;
+  --c-ink-muted: #9aa4bf;
+  --c-accent: #5eead4;
+  --c-accent-ink: #06241f;
+  --c-secondary: #818cf8;
+}
+
+@utility icon-btn {
+  @apply inline-flex h-11.5 min-w-11.5 items-center justify-center rounded-full border border-line-strong px-3.5 text-sm text-ink-soft transition-colors hover:border-accent hover:text-ink focus-visible:outline-2 focus-visible:outline-offset-2 focus-visible:outline-accent;
+}
+
+/* Hidden until RevealDirective scrolls the element into view */
+.reveal-pending { opacity: 0; }
+
+@media (prefers-reduced-motion: reduce) {
+  *, *::before, *::after {
+    animation: none !important;
+    transition: none !important;
+  }
+  .reveal-pending { opacity: 1; }
+}
