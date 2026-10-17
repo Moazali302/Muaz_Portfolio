@@ -8,7 +8,7 @@ import { ChangeDetectionStrategy, Component, input } from '@angular/core';
       <div>
         <p class="text-sm font-semibold uppercase tracking-[0.12em] text-brand">{{ eyebrow() }}</p>
         <h2
-          class="mt-4 max-w-3xl font-display text-[clamp(2rem,4vw,3.25rem)] leading-[1.1] tracking-tight"
+          class="mt-4 max-w-3xl font-display text-[length:clamp(2rem,4vw,3.25rem)] leading-[1.1] tracking-tight"
         >
           {{ title() }}
         </h2>
