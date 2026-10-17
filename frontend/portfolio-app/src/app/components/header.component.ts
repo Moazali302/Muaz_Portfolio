@@ -1,126 +1,152 @@
-import { Component, inject } from '@angular/core';
-import { CommonModule } from '@angular/common';
+import { ChangeDetectionStrategy, Component, inject, signal } from '@angular/core';
 import { RouterLink, RouterLinkActive } from '@angular/router';
 import { TranslateService } from '../guards/services/translate.service';
 import { ThemeService } from '../guards/services/theme.service';
+import { NAV_LINKS } from '../shared/config/nav-links';
+import { ButtonDirective } from '../shared/directives/button.directive';
 
 @Component({
   selector: 'app-header',
   standalone: true,
-  imports: [CommonModule, RouterLink, RouterLinkActive],
+  imports: [RouterLink, RouterLinkActive, ButtonDirective],
+  changeDetection: ChangeDetectionStrategy.OnPush,
+  host: { '(document:keydown.escape)': 'closeMenu()' },
   template: `
-    <header class="fixed top-0 left-0 right-0 z-50 bg-white/80 dark:bg-slate-900/80 backdrop-blur-md border-b border-slate-200 dark:border-slate-800">
-      <nav class="container mx-auto px-4 py-4 flex items-center justify-between">
-        <a routerLink="/home" routerLinkActive="text-indigo-600 dark:text-indigo-400" [routerLinkActiveOptions]="{ exact: true }"
-           class="text-2xl font-bold bg-gradient-to-r from-indigo-600 to-purple-600 bg-clip-text text-transparent">
-          MoazAli
+    <header class="relative z-40 bg-base text-ink">
+      <nav
+        class="mx-auto flex max-w-[1240px] items-center justify-between gap-4 px-6 py-5 lg:px-8 lg:py-7"
+        aria-label="Primary"
+      >
+        <a
+          routerLink="/home"
+          class="font-display text-2xl font-bold tracking-tight"
+          (click)="closeMenu()"
+        >
+          Moaz<span class="text-brand">.</span>Ali
         </a>
 
-        <div class="hidden md:flex items-center gap-6">
-          <a routerLink="/home" routerLinkActive="text-indigo-600 dark:text-indigo-400" [routerLinkActiveOptions]="{ exact: true }"
-             class="hover:text-indigo-600 dark:hover:text-indigo-400 transition-colors">
-            {{ translate.translate('nav.home') }}
-          </a>
-          <a routerLink="/about" routerLinkActive="text-indigo-600 dark:text-indigo-400"
-             class="hover:text-indigo-600 dark:hover:text-indigo-400 transition-colors">
-            {{ translate.translate('nav.about') }}
-          </a>
-          <a routerLink="/skills" routerLinkActive="text-indigo-600 dark:text-indigo-400"
-             class="hover:text-indigo-600 dark:hover:text-indigo-400 transition-colors">
-            {{ translate.translate('nav.skills') }}
-          </a>
-          <a routerLink="/projects" routerLinkActive="text-indigo-600 dark:text-indigo-400"
-             class="hover:text-indigo-600 dark:hover:text-indigo-400 transition-colors">
-            {{ translate.translate('nav.projects') }}
-          </a>
-          <a routerLink="/experience" routerLinkActive="text-indigo-600 dark:text-indigo-400"
-             class="hover:text-indigo-600 dark:hover:text-indigo-400 transition-colors">
-            {{ translate.translate('nav.experience') }}
-          </a>
-          <a routerLink="/blog" routerLinkActive="text-indigo-600 dark:text-indigo-400"
-             class="hover:text-indigo-600 dark:hover:text-indigo-400 transition-colors">
-            {{ translate.translate('nav.blog') }}
-          </a>
-          <a routerLink="/contact" routerLinkActive="text-indigo-600 dark:text-indigo-400"
-             class="hover:text-indigo-600 dark:hover:text-indigo-400 transition-colors">
-            {{ translate.translate('nav.contact') }}
-          </a>
-        </div>
+        <ul class="hidden items-center gap-7 lg:flex">
+          @for (link of links; track link.path) {
+            <li>
+              <a
+                [routerLink]="link.path"
+                routerLinkActive="!border-brand !text-ink"
+                [routerLinkActiveOptions]="{ exact: link.exact }"
+                class="border-b-2 border-transparent pb-1.5 text-[15px] text-ink-muted transition-colors hover:text-ink"
+              >
+                {{ translate.translate(link.key) }}
+              </a>
+            </li>
+          }
+        </ul>
 
-        <div class="flex items-center gap-2 sm:gap-4">
+        <div class="flex items-center gap-2.5">
           <button
+            type="button"
+            class="icon-btn"
             (click)="translate.toggleLang()"
-            class="p-2 rounded-lg hover:bg-slate-100 dark:hover:bg-slate-800 transition-colors"
-            [attr.aria-label]="translate.currentLang() === 'en' ? 'Switch to Urdu' : 'Switch to English'">
+            [attr.aria-label]="translate.currentLang() === 'en' ? 'Switch to Urdu' : 'Switch to English'"
+          >
             {{ translate.currentLang() === 'en' ? 'اردو' : 'EN' }}
           </button>
 
           <button
+            type="button"
+            class="icon-btn"
             (click)="theme.toggleTheme()"
-            class="p-2 rounded-lg hover:bg-slate-100 dark:hover:bg-slate-800 transition-colors"
-            [attr.aria-label]="theme.theme() === 'light' ? 'Switch to dark mode' : 'Switch to light mode'">
-            <svg *ngIf="theme.theme() === 'light'" class="w-5 h-5" fill="none" stroke="currentColor" viewBox="0 0 24 24">
-              <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2"
-                d="M20.354 15.354A9 9 0 018.646 3.646 9.003 9.003 0 0012 21a9.003 9.003 0 008.354-5.646z" />
-            </svg>
-            <svg *ngIf="theme.theme() === 'dark'" class="w-5 h-5" fill="none" stroke="currentColor" viewBox="0 0 24 24">
-              <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2"
-                d="M12 3v1m0 16v1m9-9h-1M4 12H3m15.364 6.364l-.707-.707M6.343 6.343l-.707-.707m12.728 0l-.707.707M6.343 17.657l-.707.707M16 12a4 4 0 11-8 0 4 4 0 018 0z" />
+            [attr.aria-label]="theme.theme() === 'light' ? 'Switch to dark mode' : 'Switch to light mode'"
+          >
+            <svg
+              class="h-5 w-5"
+              viewBox="0 0 24 24"
+              fill="none"
+              stroke="currentColor"
+              stroke-width="2"
+              stroke-linecap="round"
+              stroke-linejoin="round"
+              aria-hidden="true"
+            >
+              @if (theme.theme() === 'dark') {
+                <circle cx="12" cy="12" r="4" />
+                <path
+                  d="M12 2v2M12 20v2M4.9 4.9l1.4 1.4M17.7 17.7l1.4 1.4M2 12h2M20 12h2M4.9 19.1l1.4-1.4M17.7 6.3l1.4-1.4"
+                />
+              } @else {
+                <path d="M21 12.8A9 9 0 1 1 11.2 3a7 7 0 0 0 9.8 9.8z" />
+              }
             </svg>
           </button>
 
+          <div class="hidden sm:block">
+            <a appButton routerLink="/contact">{{ translate.translate('hero.hire') }}</a>
+          </div>
+
           <button
             type="button"
-            class="md:hidden p-2 rounded-lg hover:bg-slate-100 dark:hover:bg-slate-800 transition-colors"
+            class="icon-btn lg:hidden"
+            aria-controls="mobile-menu"
+            aria-label="Toggle navigation menu"
+            [attr.aria-expanded]="isMenuOpen()"
             (click)="toggleMenu()"
-            [attr.aria-expanded]="isMenuOpen"
-            aria-label="Toggle navigation menu">
-            <svg class="w-6 h-6" fill="none" stroke="currentColor" viewBox="0 0 24 24">
-              <path *ngIf="!isMenuOpen" stroke-linecap="round" stroke-linejoin="round" stroke-width="2"
-                d="M4 6h16M4 12h16M4 18h16" />
-              <path *ngIf="isMenuOpen" stroke-linecap="round" stroke-linejoin="round" stroke-width="2"
-                d="M6 18L18 6M6 6l12 12" />
+          >
+            <svg
+              class="h-5 w-5"
+              viewBox="0 0 24 24"
+              fill="none"
+              stroke="currentColor"
+              stroke-width="2"
+              stroke-linecap="round"
+              aria-hidden="true"
+            >
+              @if (isMenuOpen()) {
+                <path d="M6 6l12 12M18 6L6 18" />
+              } @else {
+                <path d="M4 7h16M4 12h16M4 17h16" />
+              }
             </svg>
           </button>
         </div>
       </nav>
 
-      <div *ngIf="isMenuOpen" class="md:hidden border-t border-slate-200 dark:border-slate-800 bg-white/95 dark:bg-slate-900/95 backdrop-blur-md">
-        <div class="container mx-auto px-4 py-4 flex flex-col gap-3">
-          <a
-            *ngFor="let item of navItems"
-            [routerLink]="item.route"
-            routerLinkActive="text-indigo-600 dark:text-indigo-400"
-            [routerLinkActiveOptions]="{ exact: item.exact }"
-            class="py-2 text-sm font-medium hover:text-indigo-600 dark:hover:text-indigo-400 transition-colors"
-            (click)="closeMenu()">
-            {{ translate.translate(item.key) }}
+      @if (isMenuOpen()) {
+        <div
+          id="mobile-menu"
+          class="absolute inset-x-0 top-full border-y border-line bg-base/95 px-6 pb-8 backdrop-blur lg:hidden"
+        >
+          <ul>
+            @for (link of links; track link.path) {
+              <li>
+                <a
+                  [routerLink]="link.path"
+                  routerLinkActive="!text-brand"
+                  [routerLinkActiveOptions]="{ exact: link.exact }"
+                  class="flex min-h-[48px] items-center border-b border-line text-lg"
+                  (click)="closeMenu()"
+                >
+                  {{ translate.translate(link.key) }}
+                </a>
+              </li>
+            }
+          </ul>
+          <a appButton routerLink="/contact" class="mt-6 w-full" (click)="closeMenu()">
+            {{ translate.translate('hero.hire') }}
           </a>
         </div>
-      </div>
+      }
     </header>
-  `
+  `,
 })
 export class HeaderComponent {
-  translate = inject(TranslateService);
-  theme = inject(ThemeService);
-  isMenuOpen = false;
+  protected readonly translate = inject(TranslateService);
+  protected readonly theme = inject(ThemeService);
+  protected readonly links = NAV_LINKS;
+  protected readonly isMenuOpen = signal(false);
 
-  navItems = [
-    { route: '/home', key: 'nav.home', exact: true },
-    { route: '/about', key: 'nav.about', exact: false },
-    { route: '/skills', key: 'nav.skills', exact: false },
-    { route: '/projects', key: 'nav.projects', exact: false },
-    { route: '/experience', key: 'nav.experience', exact: false },
-    { route: '/blog', key: 'nav.blog', exact: false },
-    { route: '/contact', key: 'nav.contact', exact: false }
-  ];
-
-  toggleMenu(): void {
-    this.isMenuOpen = !this.isMenuOpen;
+  protected toggleMenu(): void {
+    this.isMenuOpen.update((open) => !open);
   }
 
-  closeMenu(): void {
-    this.isMenuOpen = false;
+  protected closeMenu(): void {
+    this.isMenuOpen.set(false);
   }
 }
