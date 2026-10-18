@@ -1,34 +1,59 @@
-import { Component, inject } from '@angular/core';
-import { CommonModule } from '@angular/common';
+import { ChangeDetectionStrategy, Component, inject } from '@angular/core';
 import { TranslateService } from '../guards/services/translate.service';
 import { SKILLS } from '../shared/config/skills.config';
+import { CardDirective } from '../shared/directives/card.directive';
+import { RevealDirective } from '../shared/directives/reveal.directive';
+import { SectionHeaderComponent } from '../shared/ui/section-header/section-header.component';
+
+const STAGGER_COLUMNS = 4;
+const STAGGER_MS = 100;
 
 @Component({
   selector: 'app-skills',
   standalone: true,
-  imports: [CommonModule],
+  imports: [CardDirective, RevealDirective, SectionHeaderComponent],
+  changeDetection: ChangeDetectionStrategy.OnPush,
   template: `
-    <section id="skills" class="py-20 px-4 bg-gradient-to-br from-slate-50 to-indigo-50 dark:from-slate-900 dark:to-slate-800">
-      <div class="container mx-auto max-w-6xl">
-        <h2 class="text-4xl md:text-5xl font-bold text-center mb-12 bg-gradient-to-r from-indigo-600 to-purple-600 bg-clip-text text-transparent">
-          {{ translate.translate('skills.title') }}
-        </h2>
-        <div class="grid grid-cols-2 md:grid-cols-4 lg:grid-cols-6 gap-6">
-          @for (skill of skills; track skill.name) {
-            <div class="group p-6 rounded-xl bg-white dark:bg-slate-800 border border-slate-200 dark:border-slate-700 hover:shadow-lg hover:border-indigo-500 dark:hover:border-indigo-400 transition-all duration-300 transform hover:-translate-y-2">
-            <div class="flex justify-center mb-3">
-            <img [src]="skill.icon" [alt]="skill.name" class="w-10 h-10 object-contain" />
-            </div>
-              <p class="text-center font-semibold text-slate-800 dark:text-slate-200">{{ skill.name }}</p>
-            </div>
-          }
-        </div>
-      </div>
+    <section id="skills" class="mx-auto max-w-[1240px] px-6 pt-6 lg:px-8 lg:pt-10">
+      <app-section-header
+        class="block animate-reveal"
+        [level]="1"
+        [eyebrow]="translate.translate('skills.title')"
+        [title]="translate.translate('skills.heading')"
+      />
+
+      <ul class="grid grid-cols-2 gap-4 sm:grid-cols-4 sm:gap-5">
+        @for (skill of skills; track skill.name) {
+          <li
+            appCard
+            appReveal
+            [appRevealDelay]="delay($index)"
+            class="flex flex-col items-center gap-4 px-4 py-8"
+          >
+            <span
+              class="flex h-[68px] w-[68px] items-center justify-center rounded-[18px] border border-line-strong bg-base"
+            >
+              <img
+                [src]="skill.icon"
+                alt=""
+                width="44"
+                height="44"
+                loading="lazy"
+                class="h-11 w-11 object-contain"
+              />
+            </span>
+            <span class="text-center font-semibold">{{ skill.name }}</span>
+          </li>
+        }
+      </ul>
     </section>
-  `
+  `,
 })
 export class SkillsComponent {
-  translate = inject(TranslateService);
-  skills=SKILLS;
-}
+  protected readonly translate = inject(TranslateService);
+  protected readonly skills = SKILLS;
 
+  protected delay(index: number): number {
+    return (index % STAGGER_COLUMNS) * STAGGER_MS;
+  }
+}
