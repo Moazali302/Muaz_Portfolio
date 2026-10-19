@@ -7,7 +7,7 @@ const router = express.Router();
 // ===== Get all experiences (public) =====
 router.get('/', async (req, res) => {
   try {
-    const experiences = await Experience.find().sort({ order: 1, startDate: -1 });
+    const experiences = await Experience.find().sort({ isCurrent: -1, startDate: -1 });
     res.json(experiences);
   } catch (error) {
     res.status(500).json({ error: 'Server error', details: error.message });
