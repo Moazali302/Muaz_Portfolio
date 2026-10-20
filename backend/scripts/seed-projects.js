@@ -16,7 +16,13 @@ const projects = [
     category: 'Travel CRM',
     description:
       'Management platform for an Umrah travel agency: authentication journey, hotels, safe deletes and an activity feed.',
-    techStack: ['Angular', 'Signals', 'Tailwind'],
+    techStack: ['Angular20+','Nestjs','Redix','PostgreSql','Signals', 'Tailwind'],
+    images: [
+      '/assets/projects/fly-aviation-login.png',
+      '/assets/projects/fly-aviation-dashboard.png',
+      '/assets/projects/fly-aviation-queries.png',
+      '/assets/projects/fly-aviation-edit-query.png'
+    ],
     featured: true,
     order: 1,
     caseStudy: {
@@ -44,39 +50,15 @@ const projects = [
     slug: 'taleemhub-portal',
     category: 'Education SaaS',
     description: 'Multi-tenant School & Academy Management SaaS for Pakistan.',
-    techStack: ['Angular', 'TypeScript', 'Tailwind'],
+    techStack: ['Angular','MongooseDb','Database Sharding', 'TypeScript', 'Tailwind'],
+    images: [
+      '/assets/projects/taleem-hub-login.png',
+      '/assets/projects/taleem-hub-dashboard.png',
+      '/assets/projects/taleem-hub-school.png'
+    ],
     githubUrl: `${GITHUB}/Taleem-Hub_portal`,
     featured: true,
     order: 2
-  },
-  {
-    name: 'TaleemHub API',
-    slug: 'taleemhub-api',
-    category: 'Backend',
-    description: 'Scalable, secure, multi-tenant backend system for the TaleemHub platform.',
-    techStack: ['Nest.js', 'MongoDB', 'TypeScript'],
-    githubUrl: `${GITHUB}/Taleem-Hub-api`,
-    featured: true,
-    order: 3
-  },
-  {
-    name: 'MoazAli Portfolio',
-    slug: 'moazali-portfolio',
-    category: 'Portfolio',
-    description: 'A sleek, modern portfolio built with Angular, showcasing my journey.',
-    techStack: ['Angular', 'TypeScript'],
-    githubUrl: `${GITHUB}/Muaz_Portfolio`,
-    liveUrl: 'https://moaz-ali-portfolio.vercel.app',
-    order: 4
-  },
-  {
-    name: 'Node Express Mongo',
-    slug: 'node-express-mongo',
-    category: 'Backend practice',
-    description: 'Backend development practice with Node.js, Express.js, and MongoDB.',
-    techStack: ['Node.js', 'Express', 'MongoDB'],
-    githubUrl: `${GITHUB}/node-express-mongo-practice`,
-    order: 5
   }
 ];
 

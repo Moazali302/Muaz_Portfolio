@@ -31,6 +31,7 @@ const projectSchema = new mongoose.Schema(
     description: { type: String, required: true, trim: true },
     techStack: [{ type: String, trim: true }],
     coverImage: { type: String, trim: true },
+    images: [{ type: String, trim: true }],
     githubUrl: { type: String, trim: true },
     liveUrl: { type: String, trim: true },
     featured: { type: Boolean, default: false },
