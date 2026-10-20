@@ -192,7 +192,7 @@ function isAlreadySubscribed(error: unknown): boolean {
         </form>
       </div>
 
-      <form
+      <!-- <form
         appCard
         appReveal
         novalidate
@@ -216,7 +216,7 @@ function isAlreadySubscribed(error: unknown): boolean {
             {{ translate.translate('contact.newsletter.subscribe') }}
           </button>
         </div>
-      </form>
+      </form> -->
     </section>
   `,
 })

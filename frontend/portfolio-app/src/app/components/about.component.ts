@@ -12,17 +12,50 @@ interface Pillar {
 
 const PILLARS: readonly Pillar[] = [
   {
-    title: 'Specialization',
-    tags: ['Angular-V20+', 'TypeScript', 'RxJS', 'Reactive Forms', 'ag-Grid', 'Signals', 'NestJS'],
-  },
+  title: 'Specialization',
+  tags: [
+    'Angular v20+',
+    'TypeScript',
+    'RxJS',
+    'Signals',
+    'Reactive Forms',
+    'NgRx',
+    'ag-Grid',
+    'Angular Material',
+    'NestJS',
+    'PostgreSQL',
+    'TypeORM',
+    'REST APIs',
+    'JWT Authentication',
+    'HTML5 & SCSS',
+    'Git',
+    'Docker'
+  ],
+},
   {
-    title: 'Experience',
-    tags: ['Multi-Portal Systems', 'Web Applications', 'Api Integration', 'RBAC', 'i18n'],
-  },
-  {
-    title: 'Approach',
-    tags: ['Clean Code', 'Maintainable', 'Scalable UI', 'Production-Ready'],
-  },
+  title: 'Experience',
+  tags: [
+    'Multi-Portal Systems',
+    'Admin Dashboards',
+    'Web Applications',
+    'REST API Integration',
+    'RBAC',
+    'i18n (English/Arabic)',
+    'File Uploads',
+    'Data Grids & Reports',
+  ],
+},
+{
+  title: 'Approach',
+  tags: [
+    'Clean Code',
+    'Maintainable Architecture',
+    'Reusable Components',
+    'Scalable UI',
+    'Production-Ready',
+    'Security-Minded',
+  ],
+},
 ];
 
 /** Used as the /about page (`page` = true via route data) and as a section on Home. */

@@ -96,7 +96,7 @@ const experiences = [
     order: 1,
   },
   {
-    company: 'Taleem_Hub(Own-Project)',
+    company: 'Taleem_Hub',
     slug: 'taleem-hub',
     role: 'Full Stack Developer',
     employmentType: 'Part-time',
@@ -111,7 +111,7 @@ const experiences = [
       'Managed MongoDB schemas and queries to support scalable data storage and retrieval.',
       'Worked across the full stack to debug issues, ensuring smooth communication between frontend and backend.',
     ],
-    technologies: ['Angular', 'Nest.js', 'MongoDB'],
+    technologies: ['Angular', 'Nest.js', 'MongoDB','Git','Docker','REST API Integration'],
     companyUrl: 'https://taleem-hub-portal.vercel.app/auth/login',
     order: 2,
   },

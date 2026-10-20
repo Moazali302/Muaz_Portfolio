@@ -6,11 +6,15 @@ import { AboutComponent } from './about.component';
 import { HeroComponent } from './hero.component';
 import { ProjectsComponent } from './projects.component';
 import { StatsStripComponent } from './stats-strip.component';
+import { BlogComponent } from './blog.component';
+import { ContactComponent } from './contact.component';
+import { ExperienceComponent } from './experience-list/experience-list';
+import { ExperienceDetailComponent } from './experience-detail/experience-detail';
 
 @Component({
   selector: 'app-home',
   standalone: true,
-  imports: [HeroComponent, MarqueeComponent, StatsStripComponent, AboutComponent, ProjectsComponent],
+  imports: [HeroComponent, MarqueeComponent, StatsStripComponent, AboutComponent, ProjectsComponent, BlogComponent, ContactComponent, ExperienceComponent,ExperienceDetailComponent],
   changeDetection: ChangeDetectionStrategy.OnPush,
   template: `
     <app-hero />
@@ -18,6 +22,9 @@ import { StatsStripComponent } from './stats-strip.component';
     <app-stats-strip />
     <app-about />
     <app-projects />
+    <app-experience-list/>
+    <app-blog/>
+    <app-contact/>
   `,
 })
 export class HomeComponent {

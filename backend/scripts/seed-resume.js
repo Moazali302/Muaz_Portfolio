@@ -8,7 +8,7 @@ const Resume = require('../models/Resume');
 dns.setServers(['8.8.8.8', '1.1.1.1']);
 dotenv.config();
 
-const RESUME_FILE_PATH = 'C:\\Users\\Naveed Computer\\Downloads\\MoazAli-frontend-resume.pdf.pdf';
+const RESUME_FILE_PATH = 'C:\\Users\\SWH\\Downloads\\Moaz_Ali_Full_Stack_Resume.pdf';
 
 async function seed() {
   try {
