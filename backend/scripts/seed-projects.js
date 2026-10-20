@@ -50,7 +50,7 @@ const projects = [
     slug: 'taleemhub-portal',
     category: 'Education SaaS',
     description: 'Multi-tenant School & Academy Management SaaS for Pakistan.',
-    techStack: ['Angular','MongooseDb','Database Sharding', 'TypeScript', 'Tailwind'],
+    techStack: ['Angular','PostgreSql','Database Sharding', 'TypeScript', 'Tailwind'],
     images: [
       '/assets/projects/taleem-hub-login.png',
       '/assets/projects/taleem-hub-dashboard.png',
@@ -59,7 +59,20 @@ const projects = [
     githubUrl: `${GITHUB}/Taleem-Hub_portal`,
     featured: true,
     order: 2
-  }
+  },
+   {
+    name: 'MoazAli Portfolio',
+    slug: 'moazali-portfolio',
+    category: 'Portfolio',
+    description: 'A sleek, modern portfolio built with Angular, showcasing my journey.',
+    techStack: ['Angular', 'TypeScript' ,'Expressjs' ,'MongoDb','TailwindCSS'],
+     images: [
+      '/assets/projects/portfolio.png'
+    ],
+    githubUrl: `${GITHUB}/Muaz_Portfolio`,
+    liveUrl: 'https://moaz-ali-portfolio.vercel.app',
+    order: 4
+  },
 ];
 
 async function seed() {
