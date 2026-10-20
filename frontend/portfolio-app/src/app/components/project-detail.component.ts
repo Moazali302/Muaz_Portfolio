@@ -10,6 +10,8 @@ import { CardDirective } from '../shared/directives/card.directive';
 import { RevealDirective } from '../shared/directives/reveal.directive';
 import { ChipComponent } from '../shared/ui/chip/chip.component';
 import { LoadState,toLoadState } from '../shared/utlis/load-state';
+import { ImageCarouselComponent } from '../shared/ui/image-carousel/image-carousel.component';
+import { projectImages } from '../shared/utlis/project-images';
 
 interface ProjectView {
   readonly project: Project;
@@ -39,7 +41,7 @@ const SECTION_HEADING = 'mb-4 mt-12 font-display text-[1.75rem] tracking-tight f
 @Component({
   selector: 'app-project-detail',
   standalone: true,
-  imports: [RouterLink, ButtonDirective, CardDirective, ChipComponent, RevealDirective],
+  imports: [RouterLink,ImageCarouselComponent, ButtonDirective, CardDirective, ChipComponent, RevealDirective],
   changeDetection: ChangeDetectionStrategy.OnPush,
   template: `
     <div class="mx-auto max-w-[1240px] px-6 pb-8 lg:px-8">
@@ -67,22 +69,17 @@ const SECTION_HEADING = 'mb-4 mt-12 font-display text-[1.75rem] tracking-tight f
           <p class="max-w-2xl text-lg leading-relaxed text-ink-muted">{{ v.project.description }}</p>
         </header>
 
-        <div class="mb-8 h-[260px] overflow-hidden rounded-[20px] border border-line sm:h-[380px]">
-          @if (v.project.coverImage; as src) {
-            <img
-              [src]="src"
-              [alt]="v.project.name + ' preview'"
-              width="1200"
-              height="380"
-              class="h-full w-full object-cover"
-            />
-          } @else {
-            <div
-              class="flex h-full items-center justify-center bg-gradient-to-br from-brand/30 to-iris/30 font-display text-7xl font-bold"
-              aria-hidden="true"
-            >
-              {{ v.project.name[0] }}
-            </div>
+                  <div
+          class="relative mb-8 h-[260px] overflow-hidden rounded-[20px] border border-line bg-gradient-to-br from-brand/30 to-iris/30 sm:h-[380px]"
+        >
+          <span
+            class="absolute inset-0 flex items-center justify-center font-display text-7xl font-bold"
+            aria-hidden="true"
+          >
+            {{ v.project.name[0] }}
+          </span>
+          @if (heroImages().length) {
+            <app-image-carousel class="absolute inset-0" [images]="heroImages()" [alt]="v.project.name" />
           }
         </div>
 
@@ -234,6 +231,11 @@ export class ProjectDetailComponent {
   protected readonly notFound = computed(() => {
     const state = this.state();
     return state.status === 'error' && state.notFound;
+  });
+
+    protected readonly heroImages = computed(() => {
+    const view = this.view();
+    return view ? projectImages(view.project) : [];
   });
 
   protected readonly meta = computed<MetaItem[]>(() => {

@@ -79,6 +79,7 @@ export interface Project {
   description: string
   techStack: string[]
   coverImage?: string
+  images?: string[]
   githubUrl?: string
   liveUrl?: string
   featured: boolean
