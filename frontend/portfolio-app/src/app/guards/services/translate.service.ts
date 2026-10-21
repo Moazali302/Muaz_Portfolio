@@ -26,7 +26,7 @@ export class TranslateService {
       'hero.hire': 'Hire Me',
       'hero.resume': 'View Resume',
       'hero.contact': 'Contact',
-      'hero.headline.before': 'MoazAli, a full stack developer who ships ',
+      'hero.headline.before': 'Moaz Ali, a full stack developer who ships ',
       'hero.headline.highlight': 'fast interfaces',
       'hero.headline.after': ' and the APIs behind them.',
       'hero.summary': 'Angular and NestJS: enterprise multi-portal apps with ag-Grid, role-based access control and i18n.',
