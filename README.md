@@ -16,8 +16,6 @@ Content (projects, experience, blog) is served from a REST API, so the site stay
 ![Vercel](https://img.shields.io/badge/Frontend-Vercel-000000?logo=vercel&logoColor=white)
 ![Render](https://img.shields.io/badge/API-Render-46E3B7?logo=render&logoColor=black)
 
-![Portfolio home screen](docs/screenshots/home.png)
-
 </div>
 
 ---
@@ -44,16 +42,6 @@ This repository is the source of my personal portfolio, **moaz-ali-portfolio.ver
 | **Motion** | Scroll-reveal, skills marquee, floating hero card. All of it respects `prefers-reduced-motion`. |
 | **Contact** | Reactive form with per-field validation, SweetAlert2 feedback, newsletter subscription and resume download. |
 | **Accessibility** | Skip link, landmark roles, labelled controls, focus-visible styles, `aria-live` and `aria-current` where it matters. |
-
-## Screenshots
-
-| Home | Projects |
-|:---:|:---:|
-| ![Home](docs/screenshots/home.png) | ![Projects](docs/screenshots/projects.png) |
-| **Case study** | **Experience** |
-| ![Case study](docs/screenshots/case-study.png) | ![Experience](docs/screenshots/experience.png) |
-| **Blog post** | **Mobile** |
-| ![Blog post](docs/screenshots/blog-post.png) | ![Mobile](docs/screenshots/mobile.png) |
 
 ## Tech stack
 
