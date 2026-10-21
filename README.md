@@ -154,7 +154,6 @@ The dev API URL is configured in `src/environments/environment.ts`.
 | `PORT` | API port (default `3000`) |
 | `MONGODB_URI` | MongoDB connection string |
 | `FRONTEND_URL` | Deployed frontend origin allowed by CORS (`http://localhost:4202` is allowed by default) |
-| `JWT_SECRET` | Secret used to sign and verify admin tokens |
 
 **Frontend**
 
@@ -201,7 +200,6 @@ Muaz_Portfolio/
 
 ## Roadmap
 
-- [ ] Admin dashboard to manage projects, experience and posts from the UI
 - [ ] Angular SSR / prerendering for stronger SEO and faster first paint
 - [ ] CI pipeline (GitHub Actions): lint, unit tests and build on every pull request
 - [ ] End-to-end tests with Playwright for the critical flows
