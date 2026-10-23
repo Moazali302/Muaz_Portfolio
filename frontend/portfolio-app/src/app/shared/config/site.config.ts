@@ -12,7 +12,7 @@ export const SITE = {
   tagline:
     'Full Stack Developer specializing in Angular and NestJS, building scalable, production-ready web applications.',
   email: EMAIL,
-  phone: { label: '+92 327 8031032', href: 'tel:+923278031032' },
+  phone: { label: '+92 327 8031302', href: 'tel:+923278031302' },
   githubUrl: GITHUB_URL,
   linkedinUrl: LINKEDIN_URL,
   socials: [
